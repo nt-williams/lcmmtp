@@ -23,3 +23,6 @@ Imports:
 URL: https://github.com/nt-williams/lcm
 BugReports: https://github.com/nt-williams/lcm/issues
 RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
