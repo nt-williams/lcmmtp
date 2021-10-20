@@ -20,7 +20,7 @@ Npsem <- R6::R6Class(
             self$Y <- Y
         },
         #' Get all parent nodes for a variable
-        parents = function(var = c("L", "A", "Z", "M", "Y"), t) {
+        history = function(var = c("L", "A", "Z", "M", "Y"), t) {
             switch(
                 match.arg(var),
                 L = private$parents_L(t),

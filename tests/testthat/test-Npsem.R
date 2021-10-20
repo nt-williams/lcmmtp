@@ -7,6 +7,6 @@ x <- Npsem$new(
     Y = "Y"
 )
 
-x$parents("Y")
-x$parents("M", 2)
-x$parents("Z", 2) # how do all the variables of Z at time t affect each other? Does this even matter?
+x$history("Y")
+x$history("M", 2)
+x$history("Z", 2) # how do all the variables of Z at time t affect each other? Does this even matter?
