@@ -19,7 +19,9 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    R6
+    origami,
+    R6,
+    sl3
 URL: https://github.com/nt-williams/lcm
 BugReports: https://github.com/nt-williams/lcm/issues
 RoxygenNote: 7.1.1
