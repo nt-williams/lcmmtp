@@ -19,6 +19,9 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    assertthat,
+    data.table,
+    Matrix,
     origami,
     R6,
     sl3

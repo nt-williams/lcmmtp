@@ -1,15 +1,12 @@
 #' Perform Cross-fitting
 #'
-#' @param data the data, should contain training and prediction sets
+#' @param Tr training data
+#' @param P prediction data
 #' @param y outcome variable name
 #' @param x covariate variable names
 #' @param type outcome variable type (i.e, "binomial", "continuous")
-#' @param Folds an Folds object
-#' @param fold_index index to be used for data sub-setting
 #' @param lrnrs sl3 learners
-CrossFit <- function(data, y, x, type = c("binomial", "continuous"), Folds, fold_index, lrnrs) {
-    Tr <- Folds$Tr(data, fold_index)
-    P <- Folds$P(data, fold_index)
+CrossFit <- function(Tr, P, y, x, type = c("binomial", "continuous"), lrnrs) {
     fit <- Regress(Tr, y, x, match.arg(type), lrnrs)
     Predict(fit, P)
 }

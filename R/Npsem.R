@@ -11,13 +11,21 @@ Npsem <- R6::R6Class(
         M = NULL,
         Z = NULL,
         Y = NULL,
+        tau = NULL,
         initialize = function(W, L, A, Z, M, Y) {
+            assertthat::assert_that(
+                var(c(length(A), length(Z), length(M))) == 0,
+                msg = "A, Z, M have different lengths. Can't determine tau."
+            )
+
+            self$tau <- length(M)
             self$W <- W
             self$L <- L
             self$A <- A
             self$Z <- Z
             self$M <- M
             self$Y <- Y
+
         },
         #' Get all parent nodes for a variable
         history = function(var = c("L", "A", "Z", "M", "Y"), t) {
@@ -29,6 +37,10 @@ Npsem <- R6::R6Class(
                 M = private$parents_M(t),
                 Y = private$parents_Y()
             )
+        },
+        #' Return the names of all variables
+        all_vars = function() {
+            c(self$W, unlist(self$L), self$A, unlist(self$Z), self$M, self$Y)
         }
     ),
     private = list(
