@@ -1,6 +1,4 @@
-#' Create a Folds object
-#'
-#' @export
+#' R6 class for an lcm_Folds object
 lcm_Folds <- R6::R6Class(
     "lcm_Folds",
     cloneable = FALSE,
@@ -19,8 +17,13 @@ lcm_Folds <- R6::R6Class(
         P = function(data, index) {
             origami::validation(data, self$folds[[index]])
         },
-        valid_idx = function(index) {
-            self$folds[[index]]$validation_set
+        #' Map validation set indices from non-augmented data to the equivalent
+        #'  indices in the augmented data set
+        valid_augmented_idx = function(Task, t, index) {
+            do.call(c, lapply(
+                self$folds[[index]]$validation_set,
+                function(i) which(rep(1:Task$n, rep(Task$seq[[t]], Task$n)) == i)
+            ))
         }
     )
 )

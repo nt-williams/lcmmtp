@@ -1,9 +1,8 @@
-#' Create an Npsem Object
+#' R6 class for an Npsem
 #'
 #' @export
 Npsem <- R6::R6Class(
     "Npsem",
-    cloneable = FALSE,
     public = list(
         W = NULL,
         L = NULL,
