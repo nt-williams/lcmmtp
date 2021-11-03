@@ -10,8 +10,10 @@ CrossFit_D_Lt <- function(Task, t, Rv, Folds, lrnrs) {
         if (t == Task$Npsem$tau) {
             covars <- Task$Npsem$history("M", t)
         } else {
-            covars <- c(glue::glue("*tmp_lcm_mediator_var_{Task$Npsem$tau:(t + 1)}*"),
-                        Task$Npsem$history("M", t))
+            covars <- c(
+                glue::glue("*tmp_lcm_mediator_var_{Task$Npsem$tau:(t + 1)}*"),
+                Task$Npsem$history("M", t)
+            )
         }
 
         Q_Lt <- CrossFit(                                                                        # line 9 __
@@ -31,7 +33,6 @@ CrossFit_D_Lt <- function(Task, t, Rv, Folds, lrnrs) {
         G_Mt  <- G(P_a[[Task$Npsem$M[t]]], g_Mt, 1)                                               # line 14 __
 
         D_Lt <- D_L()
-
         Rv$update("D_Lt", D_Lt, t, Folds$P_augmented_idx(Task, t, v))
     }
 }

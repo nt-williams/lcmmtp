@@ -1,3 +1,4 @@
+# R6 class for a lcm_Rv object
 lcm_Rv <- R6::R6Class(
     "lcm_Rv",
     cloneable = FALSE,
@@ -10,14 +11,14 @@ lcm_Rv <- R6::R6Class(
                 Matrix::Matrix(
                     nrow = Task$seq[[1]] * nrow(Task$data),
                     ncol = Task$Npsem$tau + 1,
-                    data = 0, sparse = TRUE
+                    data = NA_real_, sparse = TRUE
                 )
 
             self$D_Lt <-
                 Matrix::Matrix(
                     nrow = Task$seq[[1]] * nrow(Task$data),
                     ncol = Task$Npsem$tau,
-                    data = 0, sparse = TRUE
+                    data = NA_real_, sparse = TRUE
                 )
 
             self$D_Zt[1:(Task$n * Task$seq[[Task$Npsem$tau]]), Task$Npsem$tau + 1] <-
@@ -25,7 +26,7 @@ lcm_Rv <- R6::R6Class(
 
             self$D_Mt[1:(Task$n * Task$seq[[Task$Npsem$tau]]), Task$Npsem$tau + 1] <- 1
         },
-        #' Update random variable matrices
+        # Update random variable matrices
         update = function(rv = c("D_Lt", "D_Zt", "D_Mt"), x, t, idx) {
             self[[match.arg(rv)]][idx, t] <- x
             invisible(self)
