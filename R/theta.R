@@ -1,0 +1,3 @@
+theta <- function(lambda, rho) {
+
+}

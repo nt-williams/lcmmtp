@@ -21,9 +21,6 @@ Np <- lcm_Npsem$new(
     Y = "Y"
 )
 
-# maybe need to hold all tmp mediator variables from the future at the current time point...
-# these are the m underbars..
-
 Folds <- lcm_Folds$new(tmp, 10)
 Task <- lcm_Task$new(tmp, Np)
 Rv <- lcm_Rv$new(Task)
