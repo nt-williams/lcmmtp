@@ -5,7 +5,6 @@ lcm_Rv <- R6::R6Class(
         D_Lt = NULL,
         D_Zt = NULL,
         D_Mt = NULL,
-        #Should I include a matrix for the Mss...?
         initialize = function(Task) {
             self$D_Zt <- self$D_Mt <-
                 Matrix::Matrix(

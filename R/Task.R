@@ -5,6 +5,7 @@
 #' * `Npsem`: A Npsem object
 #' * `seq`: A list of values defining how to augment data at a given time point
 #' * `n`: Number of observations
+#' * `type`: Outcome variable type, (i.e, "binomial" or "continuous")
 lcm_Task <- R6::R6Class(
     "lcm_Task",
     cloneable = FALSE,
@@ -18,8 +19,7 @@ lcm_Task <- R6::R6Class(
             self$data <- data.table::as.data.table(data[, self$Npsem$all_vars()])
             self$Npsem <- Npsem$clone()
             self$n <- nrow(data)
-            k <- private$determine_k()
-            self$seq <- lapply(1:self$Npsem$tau, \(t) k^((self$Npsem$tau + 1) - t))
+            self$seq <- lapply(1:self$Npsem$tau, \(t) private$determine_k()^((self$Npsem$tau + 1) - t))
             self$type <- private$check_type()
         },
         augment = function(data, t) {
