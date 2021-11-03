@@ -1,8 +1,8 @@
-#' R6 class for an Npsem
+#' R6 class for an lcm_Npsem
 #'
 #' @export
-Npsem <- R6::R6Class(
-    "Npsem",
+lcm_Npsem <- R6::R6Class(
+    "lcm_Npsem",
     public = list(
         W = NULL,
         L = NULL,
@@ -12,19 +12,21 @@ Npsem <- R6::R6Class(
         Y = NULL,
         tau = NULL,
         initialize = function(W, L, A, Z, M, Y) {
-            assertthat::assert_that(
-                var(c(length(A), length(Z), length(M))) == 0,
-                msg = "A, Z, M have different lengths. Can't determine tau."
-            )
+            self$tau <- length(A)
 
-            self$tau <- length(M)
+            checkmate::assertCharacter(W)
+            checkmate::assertCharacter(A, len = self$tau)
+            checkmate::assertCharacter(M, len = self$tau)
+            checkmate::assertCharacter(Y, len = 1)
+            checkmate::assertList(L, types = "character", len = self$tau)
+            checkmate::assertList(Z, types = "character", len = self$tau)
+
             self$W <- W
             self$L <- L
             self$A <- A
             self$Z <- Z
             self$M <- M
             self$Y <- Y
-
         },
         #' Get all parent nodes for a variable
         history = function(var = c("L", "A", "Z", "M", "Y"), t) {
@@ -47,7 +49,6 @@ Npsem <- R6::R6Class(
             if (t == 1) {
                 return(self$W)
             }
-
             c(private$parents_M(t - 1), self$M[t - 1])
         },
         parents_A = function(t) {

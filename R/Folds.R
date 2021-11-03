@@ -19,9 +19,15 @@ lcm_Folds <- R6::R6Class(
         },
         #' Map validation set indices from non-augmented data to the equivalent
         #'  indices in the augmented data set
-        valid_augmented_idx = function(Task, t, index) {
+        P_augmented_idx = function(Task, t, index) {
             do.call(c, lapply(
                 self$folds[[index]]$validation_set,
+                function(i) which(rep(1:Task$n, rep(Task$seq[[t]], Task$n)) == i)
+            ))
+        },
+        Tr_augmented_idx = function(Task, t, index) {
+            do.call(c, lapply(
+                self$folds[[index]]$training_set,
                 function(i) which(rep(1:Task$n, rep(Task$seq[[t]], Task$n)) == i)
             ))
         }

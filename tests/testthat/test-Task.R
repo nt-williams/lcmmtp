@@ -12,7 +12,7 @@ tmp <- data.frame(
     Y = rbinom(n, 1, 0.5)
 )
 
-Np <- Npsem$new(
+Np <- lcm_Npsem$new(
     W = c("W"),
     L = list(c("L_1"), c("L_2")),
     A = c("A_1", "A_2"),
@@ -21,18 +21,24 @@ Np <- Npsem$new(
     Y = "Y"
 )
 
+# maybe need to hold all tmp mediator variables from the future at the current time point...
+# these are the m underbars..
+
 Folds <- lcm_Folds$new(tmp, 10)
 Task <- lcm_Task$new(tmp, Np)
+Rv <- lcm_Rv$new(Task)
 
 Task$augment(Task$data, 2)
 
 Tr   <- Folds$Tr(Task$data, 1)
 P    <- Folds$P(Task$data, 1)
-Tr_a <- Task$augment(Tr, 2)                                          # line 7 in algorithm
+Tr_a <- Task$augment(Tr, 1)                                          # line 7 in algorithm
 P_a  <- Task$augment(P, 2)
 
 t <- 2
 lrnrs <- sl3::make_learner(sl3::Lrnr_glm)
+
+Tr_a[Tr_a[["*tmp_lcm_mediator_var*"]] == Tr[[Task$Npsem$M[t]]]]
 
 g_t  <- CrossFit(Tr, P, Task$Npsem$A[t], Task$Npsem$history("A", t), "binomial", lrnrs) # line 10
 g_Mt <- CrossFit(Tr, P, Task$Npsem$M[t], Task$Npsem$history("M", t), "binomial", lrnrs) # line 11
@@ -42,3 +48,4 @@ Gs_At <- G(P[[Task$Npsem$A[t]]], 1 - g_t, 0)                             # line 
 G_Mt  <- G(P[[Task$Npsem$M[t]]], g_Mt, 1)
 
 Folds$valid_augmented_idx(Task, 2, 1)
+Folds$Tr_augmented_idx(Task, 2, 1)

@@ -20,7 +20,9 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     assertthat,
+    checkmate,
     data.table,
+    glue,
     Matrix,
     origami,
     R6,
