@@ -5,25 +5,26 @@ lcm_Task <- R6::R6Class(
     public = list(
         data = NULL,
         Npsem = NULL,
-        seq = NULL,
+        # seq = NULL,
         n = NULL,
         type = NULL,
         initialize = function(data, Npsem) {
             self$data <- data.table::as.data.table(data[, Npsem$all_vars()])
+            self$data[["*lcm_ID*"]] <- seq.int(nrow(self$data))
             self$Npsem <- Npsem$clone()
             self$n <- nrow(data)
-            self$seq <- lapply(1:self$Npsem$tau, \(t) private$determine_k()^((self$Npsem$tau + 1) - t))
+            # self$seq <- lapply(1:self$Npsem$tau, \(t) private$determine_k()^((self$Npsem$tau + 1) - t))
             self$type <- private$check_type()
         },
         # Create augmented data for pooled regressions
         augment = function(data, t) {
-            m_underbar <- data.table::as.data.table(lapply(
-                expand.grid(lapply(1:length(t:self$Npsem$tau), function(x) private$unique_M())),
-                rep, nrow(data)
-            ))
+            m_underbar <- data.table::as.data.table(
+                lapply(expand.grid(private$unique_M()), rep, nrow(data)
+                )
+            )
 
-            names(m_underbar) <- glue::glue("*tmp_lcm_mediator_var_{self$Npsem$tau:t}*")
-            ans <- data.table::as.data.table(lapply(data, rep, rep(self$seq[[t]], nrow(data))))
+            names(m_underbar) <- g("*lcm_med_{t}*")
+            ans <- data.table::as.data.table(lapply(data, rep, rep(private$determine_k(), nrow(data))))
             cbind(ans, m_underbar)
         }
     ),

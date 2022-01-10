@@ -18,11 +18,11 @@ lcm <- function(data, Npsem, lrnrs, V) {
 
     Task <- lcm_Task$new(data, Npsem)
     Folds <- lcm_Folds$new(nrow(data), V)
-    Rv <- lcm_Rv$new(Task)
+    # Rv <- lcm_Rv$new(Task)
 
     for (t in Npsem$tau:1) {
-        CrossFit_D_Lt   (Task, t, Rv, Folds, lrnrs)
-        CrossFit_D_Zt_Mt(Task, t, Rv, Folds, lrnrs)
+        CrossFit_D_Lt   (Task, t, Folds, lrnrs)
+        CrossFit_D_Zt_Mt(Task, t, Folds, lrnrs)
     }
 
 }
