@@ -4,8 +4,6 @@ CrossFit_D_Lt <- function(Task, t, Folds, lrnrs) {
         Task$data[[g("lcm_Q_Z{t+1}")]] <- Task$data[[Task$Npsem$Y]]
     }
 
-    if (t == 1) browser()
-
     cfd <- list()
     for (v in 1:Folds$V) {
         Tr   <- Folds$Tr(Task$data, v)

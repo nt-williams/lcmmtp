@@ -19,21 +19,21 @@ lcm_Task <- R6::R6Class(
         # Create augmented data for pooled regressions
         augment = function(data, t) {
             m_underbar <- data.table::as.data.table(
-                lapply(expand.grid(private$unique_M()), rep, nrow(data)
+                lapply(expand.grid(self$unique_M()), rep, nrow(data)
                 )
             )
 
             names(m_underbar) <- g("*lcm_med_{t}*")
             ans <- data.table::as.data.table(lapply(data, rep, rep(private$determine_k(), nrow(data))))
             cbind(ans, m_underbar)
+        },
+        unique_M = function() {
+            unique(as.vector(as.matrix(self$data[, self$Npsem$M])))
         }
     ),
     private = list(
         determine_k = function() {
-            length(private$unique_M())
-        },
-        unique_M = function() {
-            unique(as.vector(as.matrix(self$data[, self$Npsem$M])))
+            length(self$unique_M())
         },
         check_type = function() {
             y <- self$data[[self$Npsem$Y]]
