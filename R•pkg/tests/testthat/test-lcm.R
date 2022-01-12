@@ -10,4 +10,4 @@ Np <- lcm_Npsem$new(
 
 lrnrs <- sl3::make_learner(sl3::Lrnr_glm_fast)
 
-lcm(sim, Np, lrnrs, 2)
+lcm(sim, 0, 0, Np, lrnrs, 5)
