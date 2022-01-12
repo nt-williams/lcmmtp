@@ -9,19 +9,10 @@ CrossFit_D_Zt_Mt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
         Tr_a <- Folds$Tr(Task$augmented, v)
         P_a  <- Folds$P(Task$augmented, v)
 
-        if (t == Task$Npsem$tau) {
-            covars_Q_Mt <- Task$Npsem$history("A", t)
-        } else {
-            covars_Q_Mt <- c(
-                g("*lcm_med_{(t+1):Task$Npsem$tau}*"),
-                Task$Npsem$history("A", t)
-            )
-        }
-
         P_a[[g("lcm_Q_Z{t}")]] <- CrossFit(                                    # line 20 __
             Tr_a[Tr_a[[Task$Npsem$A[t]]] == a_prime, ],                              # subset operation
             P_a, g("lcm_D_L{t}"),
-            c(g("*lcm_med_{Task$Npsem$tau:t}*"), Task$Npsem$history("A", t)),
+            c(g("*lcm_med_{t:Task$Npsem$tau}*"), Task$Npsem$history("A", t)),
             "continuous", lrnrs
         )
 
@@ -32,13 +23,13 @@ CrossFit_D_Zt_Mt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
         P_a[[g("lcm_Q_M{t}")]] <- CrossFit(                        # line 21 __
             Tr_a[Tr_a[[Task$Npsem$A[t]]] == a_star, ],                  # subset operation
             P_a, g("lcm_D_M{t+1}"),
-            covars_Q_Mt,
+            c(g("*lcm_med_{t:Task$Npsem$tau}*"), Task$Npsem$history("A", t)),
             ifelse(t == Task$Npsem$tau, "binomial", "continuous"),
             lrnrs
         )
 
-        P_a[[g("lcm_D_Z{t}")]] <- D_Z(P_a, t, Task$Npsem$tau)
-        P_a[[g("lcm_D_M{t}")]] <- D_M(P_a, t, Task$Npsem$tau, Task$Npsem$M)
+        P_a[[g("lcm_D_Z{t}")]] <- D_Zt(P_a, t, Task$Npsem$tau)
+        P_a[[g("lcm_D_M{t}")]] <- D_Mt(P_a, t, Task$Npsem$tau, Task$Npsem$M)
 
         cfd[[v]] <- P_a
     }

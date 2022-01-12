@@ -25,14 +25,15 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
     }
 
     bar_M <- expand.grid(lapply(1:Npsem$tau, function(t) Task$unique_M()))
-    names(bar_M) <- Npsem$M
+    names(bar_M) <- g("*lcm_med_{1:Npsem$tau}*")
+    data.table::setDT(bar_M)
 
-    nuis <- apply(bar_M, 1, function(bar_m) {
+    nuis <- slider::slide(bar_M, function(bar_m) {
         comp <- lapply(1:Folds$V, function(v) {
-            P_v <- Folds$P(merge(bar_m, Task$augmented, all.x = TRUE), v)
+            P_v <- Folds$P(data.table::merge.data.table(bar_m, Task$augmented, all.x = TRUE), v)
             list(
                 lambda_v = mean(P_v[["lcm_D_M1"]]),
-                rho_v = mean(P_v[["lcm_D_Z1"]])
+                rho_v = mean(P_v[["lcm_D_Z1"]]) # SHOULD THIS BE L1 INSTEAD OF Z1?
             )
         })
 
@@ -40,8 +41,15 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
             rho = mean(vapply(comp, function(x) x$rho_v, FUN.VALUE = 1)),
             lambda = mean(vapply(comp, function(x) x$lambda_v, FUN.VALUE = 1))
         )
-    }, simplify = FALSE)
+    })
 
     theta <- sum(vapply(nuis, function(m) m$rho * m$lambda, 1))
     theta
+
+    # add variance
+    # add confidence intervals
+    # n = 500, 5000
+    # compute bias * root n -> 0
+    # coverage is nominal at 0.95
+
 }

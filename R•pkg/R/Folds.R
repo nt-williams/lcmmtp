@@ -7,6 +7,11 @@ lcm_Folds <- R6::R6Class(
         V = NULL,
         initialize = function(n, V) {
             self$folds <- origami::make_folds(n, V = V)
+
+            if (V == 1) {
+                self$folds[[1]]$training_set <- self$folds[[1]]$validation_set
+            }
+
             self$V <- V
         },
         # Get training data from a given fold index

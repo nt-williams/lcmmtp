@@ -1,7 +1,7 @@
 g <- glue::glue
 
 G <- function(var, g, level) {
-    as.numeric(var == level) / g
+    as.numeric(var == level) / b(g)
 }
 
 # G should be a matrix with rows for subjects and columns for time point
@@ -29,4 +29,10 @@ H <- function(G, l, u) {
     }
 
     apply(as.matrix(G[, g("lcm_G_M{l:u}")]), 1, prod)
+}
+
+Sum <- function(x) Reduce(`+`, x)
+
+b <- function(x) {
+    pmax(x, .01)
 }
