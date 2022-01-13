@@ -9,6 +9,10 @@ lcm(data, a_prime, a_star, Npsem, lrnrs, V)
 \arguments{
 \item{data}{A data frame}
 
+\item{a_prime}{Value of a', 0 or 1.}
+
+\item{a_star}{Value of a*, 0 or 1.}
+
 \item{Npsem}{An `lcm_Npsem` object mapping observed variables to the assumed NPSEM}
 
 \item{lrnrs}{An object inhering from `Lrnr_base` from the sl3 package}

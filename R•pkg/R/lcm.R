@@ -2,6 +2,8 @@
 #'
 #' @param data A data frame
 #' @param Npsem An `lcm_Npsem` object mapping observed variables to the assumed NPSEM
+#' @param a_prime Value of a', 0 or 1.
+#' @param a_star Value of a*, 0 or 1.
 #' @param lrnrs An object inhering from `Lrnr_base` from the sl3 package
 #' @param V The number of folds for cross-fitting
 #'
