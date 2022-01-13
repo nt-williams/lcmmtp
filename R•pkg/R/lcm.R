@@ -51,8 +51,6 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
         )
     })
 
-    theta <- sum(vapply(nuis, function(m) m$theta * m$lambda, 1))
-
     S <- Sum(
         lapply(nuis, function(m) {
             (Task$augmented$lcm_D_Z1 - m$theta)*m$lambda +
@@ -60,9 +58,12 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
         })
     )
 
-    list(
-        theta = theta,
+    ans <- list(
+        theta = sum(vapply(nuis, function(m) m$theta * m$lambda, 1)),
         var = var(S) / Task$n,
         S = S
     )
+
+    class(ans) <- "lcm"
+    ans
 }
