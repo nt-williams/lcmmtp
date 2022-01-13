@@ -21,8 +21,20 @@ knitr::opts_chunk$set(
 
 > Efficient and flexible causal mediation with longitudinal mediators, treatments, and confounders
 
-    # add variance
-    # add confidence intervals
-    # n = 500, 5000
-    # compute bias * root n -> 0
-    # coverage is nominal at 0.95
+<!-- # n = 500, 5000 -->
+<!-- # compute bias * root n -> 0 -->
+<!-- # coverage is nominal at 0.95 -->
+
+```{r}
+data("sim", package = "lcm")
+
+Np <- lcm::lcm_Npsem$new(
+    L = list(c("L_1"), c("L_2")),
+    A = c("A_1", "A_2"),
+    Z = list(c("Z_1"), c("Z_2")),
+    M = c("M_1", "M_2"),
+    Y = "Y"
+)
+
+lcm::lcm(sim, 0, 0, Np, sl3::Lrnr_glm_fast$new(), 5)
+```
