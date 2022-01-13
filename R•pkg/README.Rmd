@@ -20,3 +20,9 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 > Efficient and flexible causal mediation with longitudinal mediators, treatments, and confounders
+
+    # add variance
+    # add confidence intervals
+    # n = 500, 5000
+    # compute bias * root n -> 0
+    # coverage is nominal at 0.95

@@ -1,5 +1,5 @@
 D_Mt <- function(P_a, t, tau, M) {
-    # Do first summation in equation (7)
+    # Do first summation in formula (7)
     summation_1 <- Sum(
         lapply(t:tau, function(s) {
             `K*_t,s` <- K_s(P_a, t, s)

@@ -1,5 +1,5 @@
 D_Lt <- function(P_a, t, tau) {
-    # Do first summation in equation (5)
+    # First summation in formula (5)
     summation_1 <- Sum(
         lapply(t:tau, function(s) {
             `K'_t,s` <- K_p(P_a, t, s)
@@ -11,7 +11,7 @@ D_Lt <- function(P_a, t, tau) {
         })
     )
 
-    # Do second summation in equation (5)
+    # Second summation in formula (5)
     if ((t + 1) <= tau) {
         summation_2 <- Sum(
             lapply((t+1):tau, function(s) {
@@ -29,5 +29,6 @@ D_Lt <- function(P_a, t, tau) {
 
     `Q_L,t` <- P_a[[g("lcm_Q_L{t}")]]
 
-    summation_1 + summation_2 + `Q_L,t` # Formula (5) in paper
+    # Formula (5) in paper
+    summation_1 + summation_2 + `Q_L,t`
 }

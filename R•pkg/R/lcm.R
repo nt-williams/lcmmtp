@@ -9,7 +9,15 @@
 #' @export
 #'
 #' @examples
-#' TO DO
+#' Np <- lcm_Npsem$new(
+#'     L = list(c("L_1"), c("L_2")),
+#'     A = c("A_1", "A_2"),
+#'     Z = list(c("Z_1"), c("Z_2")),
+#'     M = c("M_1", "M_2"),
+#'     Y = "Y"
+#' )
+#'
+#' lcm(sim, 0, 0, Np, sl3::Lrnr_glm_fast$new(), 5)
 lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
     checkmate::assertDataFrame(data[, Npsem$all_vars()], any.missing = FALSE)
     checkmate::assertR6(Npsem, "lcm_Npsem")
@@ -33,23 +41,28 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
             P_v <- Folds$P(data.table::merge.data.table(bar_m, Task$augmented, all.x = TRUE), v)
             list(
                 lambda_v = mean(P_v[["lcm_D_M1"]]),
-                rho_v = mean(P_v[["lcm_D_Z1"]]) # SHOULD THIS BE L1 INSTEAD OF Z1?
+                theta_v = mean(P_v[["lcm_D_Z1"]])
             )
         })
 
         list(
-            rho = mean(vapply(comp, function(x) x$rho_v, FUN.VALUE = 1)),
+            theta = mean(vapply(comp, function(x) x$theta_v, FUN.VALUE = 1)),
             lambda = mean(vapply(comp, function(x) x$lambda_v, FUN.VALUE = 1))
         )
     })
 
-    theta <- sum(vapply(nuis, function(m) m$rho * m$lambda, 1))
-    theta
+    theta <- sum(vapply(nuis, function(m) m$theta * m$lambda, 1))
 
-    # add variance
-    # add confidence intervals
-    # n = 500, 5000
-    # compute bias * root n -> 0
-    # coverage is nominal at 0.95
+    S <- Sum(
+        lapply(nuis, function(m) {
+            (Task$augmented$lcm_D_Z1 - m$theta)*m$lambda +
+                (Task$augmented$lcm_D_M1 - m$lambda)*m$theta
+        })
+    )
 
+    list(
+        theta = theta,
+        var = var(S) / Task$n,
+        S = S
+    )
 }
