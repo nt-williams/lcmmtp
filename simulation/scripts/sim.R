@@ -6,7 +6,7 @@
 # Intended to be run with Rscript
 # -------------------------------------------------------------------------
 
-source("simulation/R/dgm.R")
+source("simulation/R/dgm.r")
 
 id <- Sys.getenv("SGE_TASK_ID")
 
@@ -24,17 +24,16 @@ simulate <- function(n, seed) {
     )
 
     V <- ifelse(n >= 1e4, 2, 10)
-    res <- lcm::lcm(d, 1, 1, Np, sl3::Lrnr_xgboost$new(), V)
+    res <- lcm::lcm(d, 1, 1, Np, sl3::Lrnr_ranger$new(), V)
 
-    readr::write_csv(
+    write.table(
         data.frame(seed = seed, n = n, theta = res$theta, var = res$var),
-        "simulation/data/sims/results•13JAN22.csv",
-        append = TRUE
+        paste0("simulation/data/sims/results•14JAN22•", id, ".csv")
     )
 }
 
 args <- commandArgs(trailingOnly = TRUE)
 
-simulate(args$n, round(runif(1, 1, 1e5)))
+simulate(args[[1]], round(runif(1, 1, 1e5)))
 
 quit("no")
