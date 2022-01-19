@@ -10,7 +10,7 @@ lcm_Task <- R6::R6Class(
         type = NULL,
         initialize = function(data, Npsem) {
             self$data <- data.table::as.data.table(data[, Npsem$all_vars()])
-            self$data[["*lcm_ID*"]] <- seq.int(nrow(self$data))
+            self$data[["lcm_ID"]] <- seq.int(nrow(self$data))
             self$augmented <- self$data
             self$Npsem <- Npsem$clone()
             self$n <- nrow(data)
@@ -23,7 +23,7 @@ lcm_Task <- R6::R6Class(
                 )
             )
 
-            names(m_underbar) <- g("*lcm_med_{t}*")
+            names(m_underbar) <- g("lcm_med_{t}")
             ans <- data.table::as.data.table(lapply(data, rep, rep(private$determine_k(), nrow(data))))
             cbind(ans, m_underbar)
         },

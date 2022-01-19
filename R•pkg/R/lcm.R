@@ -24,7 +24,7 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
     checkmate::assertDataFrame(data[, Npsem$all_vars()], any.missing = FALSE)
     checkmate::assertR6(Npsem, "lcm_Npsem")
     checkmate::assertR6(lrnrs, "Lrnr_base")
-    checkmate::assertNumber(V, lower = 2, upper = nrow(data) - 1)
+    checkmate::assertNumber(V, lower = 1, upper = nrow(data) - 1)
 
     Task <- lcm_Task$new(data, Npsem)
     Folds <- lcm_Folds$new(nrow(data), V)
@@ -35,7 +35,7 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
     }
 
     bar_M <- expand.grid(lapply(1:Npsem$tau, function(t) Task$unique_M()))
-    names(bar_M) <- g("*lcm_med_{1:Npsem$tau}*")
+    names(bar_M) <- g("lcm_med_{1:Npsem$tau}")
     data.table::setDT(bar_M)
 
     nuis <- slider::slide(bar_M, function(bar_m) {

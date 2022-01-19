@@ -8,12 +8,12 @@ D_Mt <- function(P_a, t, tau, M) {
                 y_1 <- rep(1, nrow(P_a))
             } else {
                 y_1 <- apply(
-                    P_a[, g("*lcm_med_{t:(s-1)}*"), drop = FALSE] == P_a[, M[t:(s - 1)], drop = FALSE]
+                    P_a[, g("lcm_med_{t:(s-1)}"), drop = FALSE] == P_a[, M[t:(s - 1)], drop = FALSE]
                     , 1, prod
                 )
             }
 
-            y_2 <- (as.numeric(P_a[[g("*lcm_med_{s}*")]] == P_a[[M[s]]]) *
+            y_2 <- (as.numeric(P_a[[g("lcm_med_{s}")]] == P_a[[M[s]]]) *
                         P_a[[g("lcm_Q_M{s+1}")]]) -
                 P_a[[g("lcm_Q_M{s}")]]
 

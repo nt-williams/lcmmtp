@@ -16,11 +16,11 @@ lcm_Folds <- R6::R6Class(
         },
         # Get training data from a given fold index
         Tr = function(data, index) {
-            data[data$`*lcm_ID*` %in% self$folds[[index]]$training_set, ]
+            data[data$`lcm_ID` %in% self$folds[[index]]$training_set, ]
         },
         # Get validation data from a given fold index
         P = function(data, index) {
-            data[data$`*lcm_ID*` %in% self$folds[[index]]$validation_set, ]
+            data[data$`lcm_ID` %in% self$folds[[index]]$validation_set, ]
         }
     )
 )

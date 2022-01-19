@@ -12,18 +12,18 @@ CrossFit_D_Zt_Mt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
         P_a[[g("lcm_Q_Z{t}")]] <- CrossFit(                                    # line 20 __
             Tr_a[Tr_a[[Task$Npsem$A[t]]] == a_prime, ],                              # subset operation
             P_a, g("lcm_D_L{t}"),
-            c(g("*lcm_med_{t:Task$Npsem$tau}*"), Task$Npsem$history("A", t)),
+            c(g("lcm_med_{t:Task$Npsem$tau}"), Task$Npsem$history("A", t)),
             "continuous", lrnrs
         )
 
         Tr_a[[g("lcm_D_M{t+1}")]] <-
-            (Tr_a[[g("*lcm_med_{t}*")]] == Tr_a[[Task$Npsem$M[t]]]) *        # line 21 __
+            (Tr_a[[g("lcm_med_{t}")]] == Tr_a[[Task$Npsem$M[t]]]) *        # line 21 __
             Tr_a[[g("lcm_D_M{t+1}")]]
 
         P_a[[g("lcm_Q_M{t}")]] <- CrossFit(                        # line 21 __
             Tr_a[Tr_a[[Task$Npsem$A[t]]] == a_star, ],                  # subset operation
             P_a, g("lcm_D_M{t+1}"),
-            c(g("*lcm_med_{t:Task$Npsem$tau}*"), Task$Npsem$history("A", t)),
+            c(g("lcm_med_{t:Task$Npsem$tau}"), Task$Npsem$history("A", t)),
             ifelse(t == Task$Npsem$tau, "binomial", "continuous"),
             lrnrs
         )
@@ -35,7 +35,7 @@ CrossFit_D_Zt_Mt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
     }
 
     cfd <- Reduce(rbind, cfd)
-    data.table::setorder(cfd, "*lcm_ID*")
+    data.table::setorder(cfd, "lcm_ID")
 
     Task$augmented <- cfd
 }
