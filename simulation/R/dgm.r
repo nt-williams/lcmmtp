@@ -8,16 +8,7 @@
 library(tidyverse)
 library(simcausal)
 
-draw_coefs <- function(cats, n_vars, seed) {
-    set.seed(seed)
-    matrix(runif((cats - 1) * n_vars, -1, 1), ncol = cats - 1)
-}
-
-coefs <- data.frame(
-    cats = c(3, 2, 3, 4, 3, 2, 3, 4, 2),
-    n_vars = c(1, 1, 2, 3, 4, 5, 6, 7, 8),
-    seed = c(3234, 982365, 9865, 5109865, 323714, 825, 65, 10965, 51865)
-) %>% pmap(draw_coefs)
+coefs <- readRDS("simulation/data/coefs.rds")
 
 ord_prob <- function(coefs_n, ...) {
     coefs <- coefs[[coefs_n]]

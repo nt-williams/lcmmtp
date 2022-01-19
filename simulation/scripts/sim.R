@@ -24,7 +24,7 @@ simulate <- function(n, seed) {
     )
 
     V <- ifelse(n >= 1e4, 2, 10)
-    res <- lcm::lcm(d, 1, 1, Np, sl3::Lrnr_ranger$new(), V)
+    res <- lcm::lcm(d, 0, 0, Np, sl3::Lrnr_xgboost$new(), V)
 
     write.table(
         data.frame(seed = seed, n = n, theta = res$theta, var = res$var),
