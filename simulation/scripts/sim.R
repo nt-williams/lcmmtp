@@ -6,11 +6,22 @@
 # Intended to be run with Rscript
 # -------------------------------------------------------------------------
 
+library(glue)
+
 source("simulation/R/dgm.r")
 
 id <- Sys.getenv("SGE_TASK_ID")
 
 if (id == "undefined" || id == "") id <- 1
+
+sl <- sl3::Lrnr_sl$new(
+    learners = sl3::make_learner_stack(
+        sl3::Lrnr_glm,
+        sl3::Lrnr_earth,
+        sl3::Lrnr_lightgbm
+    ),
+    metalearners = sl3::Lrnr_nnls$new()
+)
 
 simulate <- function(n, seed) {
     d <- datagen(n, seed)
@@ -24,11 +35,24 @@ simulate <- function(n, seed) {
     )
 
     V <- ifelse(n >= 1e4, 2, 10)
-    res <- lcm::lcm(d, 0, 0, Np, sl3::Lrnr_xgboost$new(), V)
 
-    write.table(
-        data.frame(seed = seed, n = n, theta = res$theta, var = res$var),
-        paste0("simulation/data/sims/results•14JAN22•", id, ".csv")
+    res_00 <- lcm::lcm(d, 0, 0, Np, sl, V)
+    res_11 <- lcm::lcm(d, 1, 1, Np, sl, V)
+    res_10 <- lcm::lcm(d, 1, 0, Np, sl, V)
+
+    write.csv(
+        data.frame(
+            seed = seed,
+            n = n,
+            direct = res_10$theta - res_00$theta,
+            var_direct = res_10$var + res_00$var,
+            indirect = res_11$theta - res_10$theta,
+            var_indirect = res_11$var + res_10$var,
+            total = res_11$theta - res_00$theta,
+            var_total = res_11$var + res_00$var
+        ),
+        glue("simulation/data/sims/{sprintf('%02d', id)}•{n}.csv"),
+        row.names = FALSE
     )
 }
 

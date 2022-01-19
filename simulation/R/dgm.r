@@ -15,6 +15,7 @@ ord_prob <- function(coefs_n, ...) {
     vars  <- data.frame(...)
     lin_pred <- cbind(as.matrix(vars) %*% coefs, 0)
     probs <- exp(lin_pred) / rowSums(exp(lin_pred))
+    probs <- pmin(pmax(probs, 0.02), 0.98)
     if(nrow(probs) == 1) {
         return(probs[1, ])
     }
@@ -50,7 +51,7 @@ datagen <- function(n, seed) {
 }
 
 true <- function() {
-    data_points <- expand.grid(L_1 = 1:3, A_1 = 0:1, Z_1 = 1:3, M_1 = 1:4, L_2 = 1:3, A_2 = 0:1, Z_2 = 1:3, M_2 = 1:4)
+    data_points <- expand.grid(L_1 = 1:3, A_1 = 0:1, Z_1 = 1:3, M_1 = 1:3, L_2 = 1:3, A_2 = 0:1, Z_2 = 1:3, M_2 = 1:3)
 
     datx <- mutate(data_points, QL2 = ord_prob(9, M_2, Z_2, L_2, A_2, M_1, Z_1, L_1, A_1)[, 2])
     pZ2 <- with(datx, ord_prob(7, L_2, A_2, M_1, Z_1, L_1, A_1))
@@ -108,8 +109,8 @@ true <- function() {
                pM2 = case_when(
                    M_2 == 1 ~ pM2[, 1],
                    M_2 == 2 ~ pM2[, 2],
-                   M_2 == 3 ~ pM2[, 3],
-                   M_2 == 4 ~ pM2[, 4]
+                   M_2 == 3 ~ pM2[, 3]#,
+                   #M_2 == 4 ~ pM2[, 4]
                ),
                pZ2 = case_when(
                    Z_2 == 1 ~ pZ2[, 1],
@@ -135,8 +136,8 @@ true <- function() {
             pM1 = case_when(
                 M_1 == 1 ~ pM1[, 1],
                 M_1 == 2 ~ pM1[, 2],
-                M_1 == 3 ~ pM1[, 3],
-                M_1 == 4 ~ pM1[, 4]
+                M_1 == 3 ~ pM1[, 3]#,
+                #M_1 == 4 ~ pM1[, 4]
             ),
             pZ1 = case_when(
                 Z_1 == 1 ~ pZ1[, 1],
