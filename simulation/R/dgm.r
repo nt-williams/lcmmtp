@@ -15,7 +15,7 @@ ord_prob <- function(coefs_n, ...) {
     vars  <- data.frame(...)
     lin_pred <- cbind(as.matrix(vars) %*% coefs, 0)
     probs <- exp(lin_pred) / rowSums(exp(lin_pred))
-    probs <- pmin(pmax(probs, 0.02), 0.98)
+    probs <- pmin(pmax(probs, 0.01), 0.99)
     if(nrow(probs) == 1) {
         return(probs[1, ])
     }

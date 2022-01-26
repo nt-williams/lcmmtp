@@ -4,6 +4,6 @@ read_zip <- function(tar) {
     purrr::map(files, function(file) {
         p()
         con <- unz(tar, file)
-        read.table(con)
+        read.csv(con)
     })
 }

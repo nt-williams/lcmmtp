@@ -23,6 +23,8 @@ sl <- sl3::Lrnr_sl$new(
     metalearners = sl3::Lrnr_nnls$new()
 )
 
+sl <- sl3::Lrnr_xgboost$new()
+
 simulate <- function(n, seed) {
     d <- datagen(n, seed)
 
@@ -51,13 +53,13 @@ simulate <- function(n, seed) {
             total = res_11$theta - res_00$theta,
             var_total = res_11$var + res_00$var
         ),
-        glue("simulation/data/sims/{sprintf('%02d', id)}•{n}.csv"),
+        glue("simulation/data/sims/{id}-{n}.csv"),
         row.names = FALSE
     )
 }
 
 args <- commandArgs(trailingOnly = TRUE)
 
-simulate(args[[1]], round(runif(1, 1, 1e5)))
+simulate(as.numeric(args[[1]]), round(runif(1, 1, 1e5)))
 
 quit("no")
