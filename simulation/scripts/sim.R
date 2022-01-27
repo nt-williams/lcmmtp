@@ -23,9 +23,9 @@ sl <- sl3::Lrnr_sl$new(
     metalearners = sl3::Lrnr_nnls$new()
 )
 
-sl <- sl3::Lrnr_xgboost$new()
+sl <- sl3::Lrnr_hal9001$new()
 
-simulate <- function(n, seed) {
+simulate <- function(n, seed, V) {
     d <- datagen(n, seed)
 
     Np <- lcm::lcm_Npsem$new(
@@ -36,22 +36,22 @@ simulate <- function(n, seed) {
         Y = "Y"
     )
 
-    V <- ifelse(n >= 1e4, 2, 10)
+    #V <- ifelse(n >= 1e4, 2, 10)
 
     res_00 <- lcm::lcm(d, 0, 0, Np, sl, V)
     res_11 <- lcm::lcm(d, 1, 1, Np, sl, V)
     res_10 <- lcm::lcm(d, 1, 0, Np, sl, V)
-
+    
     write.csv(
         data.frame(
             seed = seed,
             n = n,
             direct = res_10$theta - res_00$theta,
-            var_direct = res_10$var + res_00$var,
+            var_direct = var(res_10$S - res_00$S) / n,
             indirect = res_11$theta - res_10$theta,
-            var_indirect = res_11$var + res_10$var,
+            var_indirect = var(res_11$S + res_10$S) / n,
             total = res_11$theta - res_00$theta,
-            var_total = res_11$var + res_00$var
+            var_total = var(res_11$S + res_00$S) / n
         ),
         glue("simulation/data/sims/{id}-{n}.csv"),
         row.names = FALSE
@@ -60,6 +60,6 @@ simulate <- function(n, seed) {
 
 args <- commandArgs(trailingOnly = TRUE)
 
-simulate(as.numeric(args[[1]]), round(runif(1, 1, 1e5)))
+simulate(as.numeric(args[[1]]), round(runif(1, 1, 1e5)), as.numeric(args[[2]]))
 
 quit("no")
