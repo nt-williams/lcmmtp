@@ -49,9 +49,9 @@ simulate <- function(n, seed, V) {
             direct = res_10$theta - res_00$theta,
             var_direct = var(res_10$S - res_00$S) / n,
             indirect = res_11$theta - res_10$theta,
-            var_indirect = var(res_11$S + res_10$S) / n,
+            var_indirect = var(res_11$S - res_10$S) / n,
             total = res_11$theta - res_00$theta,
-            var_total = var(res_11$S + res_00$S) / n
+            var_total = var(res_11$S - res_00$S) / n
         ),
         glue("simulation/data/sims/{id}-{n}.csv"),
         row.names = FALSE
