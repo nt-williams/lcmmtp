@@ -23,7 +23,7 @@ lcm_Npsem <- R6::R6Class(
             checkmate::assertCharacter(M, len = self$tau)
             checkmate::assertCharacter(Y, len = 1)
             checkmate::assertList(L, types = "character", len = self$tau)
-            checkmate::assertList(Z, types = "character", len = self$tau)
+            checkmate::assertList(Z, types = c("character", "null"), len = self$tau)
 
             self$L <- L
             self$A <- A

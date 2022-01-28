@@ -23,6 +23,7 @@ Regress <- function(Tr, y, x, type, lrnrs) {
         data = Tr,
         covariates = x,
         outcome = y,
+        id = "lcm_ID",
         outcome_type = type
     )
 
