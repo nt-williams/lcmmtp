@@ -23,8 +23,6 @@ sl <- sl3::Lrnr_sl$new(
     metalearners = sl3::Lrnr_nnls$new()
 )
 
-sl <- sl3::Lrnr_hal9001$new()
-
 simulate <- function(n, seed, V) {
     d <- datagen(n, seed)
 
@@ -59,6 +57,17 @@ simulate <- function(n, seed, V) {
 }
 
 args <- commandArgs(trailingOnly = TRUE)
+
+n <- as.numeric(args[[1]])
+
+#sl <- sl3::Lrnr_hal9001$new(
+#    lambda = seq(1 / n^2, 1 / sqrt(n), length.out = 50),
+#    max_degree = 5, 
+#    family = "gaussian", 
+#    smoothness_order = 0
+#)
+
+#sl <- sl3::Lrnr_glm$new()
 
 simulate(as.numeric(args[[1]]), round(runif(1, 1, 1e5)), as.numeric(args[[2]]))
 

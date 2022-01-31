@@ -11,7 +11,7 @@ K_p <- function(G, l, u) {
 
     out <- apply(as.matrix(G[, g("lcm_Gp_A{l:u}")]), 1, prod)
     trim <- 1 / pmin(0.001, 0.01^log(u - l))
-    return(pmin(out, trim))
+    pmin(out, trim)
 }
 
 K_s <- function(G, l, u) {
@@ -19,7 +19,9 @@ K_s <- function(G, l, u) {
         return(rep(1, nrow(G)))
     }
 
-    apply(as.matrix(G[, g("lcm_Gs_A{l:u}")]), 1, prod)
+    out <- apply(as.matrix(G[, g("lcm_Gs_A{l:u}")]), 1, prod)
+    trim <- 1 / pmin(0.001, 0.01^log(u - l))
+    pmin(out, trim)
 }
 
 H <- function(G, l, u) {
@@ -27,7 +29,9 @@ H <- function(G, l, u) {
         return(rep(1, nrow(G)))
     }
 
-    apply(as.matrix(G[, g("lcm_G_M{l:u}")]), 1, prod)
+    out <- apply(as.matrix(G[, g("lcm_G_M{l:u}")]), 1, prod)
+    trim <- 1 / pmin(0.001, 0.01^log(u - l))
+    pmin(out, trim)
 }
 
 Sum <- function(x) Reduce(`+`, x)
