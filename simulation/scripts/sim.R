@@ -8,6 +8,9 @@
 
 library(glue)
 
+## setwd('../../')
+## library(devtools)
+## load_all('R•pkg')
 source("simulation/R/dgm.r")
 
 id <- Sys.getenv("SGE_TASK_ID")
@@ -23,6 +26,9 @@ sl <- sl3::Lrnr_sl$new(
     metalearners = sl3::Lrnr_nnls$new()
 )
 
+## n <- 10000
+## seed <- 1019
+## V <- 3
 simulate <- function(n, seed, V) {
     d <- datagen(n, seed)
 
