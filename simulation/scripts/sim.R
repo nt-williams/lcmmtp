@@ -39,7 +39,7 @@ simulate <- function(n, seed, V) {
     res_00 <- lcm::lcm(d, 0, 0, Np, sl, V)
     res_11 <- lcm::lcm(d, 1, 1, Np, sl, V)
     res_10 <- lcm::lcm(d, 1, 0, Np, sl, V)
-    
+
     write.csv(
         data.frame(
             seed = seed,
@@ -60,10 +60,12 @@ args <- commandArgs(trailingOnly = TRUE)
 
 n <- as.numeric(args[[1]])
 
-#sl <- sl3::Lrnr_hal9001$new(
-#    lambda = seq(1 / n^2, 1 / sqrt(n), length.out = 50),
-#    max_degree = 5, 
-#    family = "gaussian", 
+## ID: apparently there are some issues with the below lambda sequence, does not seem to work as it did for lmtp
+## Maybe we should try lambda.min.ratio or something else. (to discuss)
+# sl <- sl3::Lrnr_hal9001$new(
+#    lambda = seq(1 / n^2, 1 / n^(1/4), length.out = 500),
+#    max_degree = 5,
+#    family = "gaussian",
 #    smoothness_order = 0
 #)
 

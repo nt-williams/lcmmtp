@@ -13,9 +13,10 @@ coefs <- readRDS("simulation/data/coefs.rds")
 ord_prob <- function(coefs_n, ...) {
     coefs <- coefs[[coefs_n]]
     vars  <- data.frame(...)
-    lin_pred <- cbind(as.matrix(vars) %*% coefs, 0)
-    probs <- exp(lin_pred) / rowSums(exp(lin_pred))
-    probs <- pmin(pmax(probs, 0.1), 0.9)
+    lin_pred <- as.matrix(vars) %*% coefs
+    probs <- exp(lin_pred) / (1 + rowSums(exp(lin_pred)))
+    probs <- 0.8 * probs + 0.1
+    probs <- cbind(probs, 1 - rowSums(probs))
     if(nrow(probs) == 1) {
         return(probs[1, ])
     }
@@ -51,6 +52,7 @@ datagen <- function(n, seed) {
 }
 
 true <- function() {
+
     data_points <- expand.grid(L_1 = 1:3, A_1 = 0:1, Z_1 = 1:3, M_1 = 1:3, L_2 = 1:3, A_2 = 0:1, Z_2 = 1:3, M_2 = 1:3)
 
     datx <- mutate(data_points, QL2 = ord_prob(9, M_2, Z_2, L_2, A_2, M_1, Z_1, L_1, A_1)[, 2])
@@ -169,3 +171,4 @@ true <- function() {
 
     c(theta11, theta10, theta01, theta00)
 }
+true()

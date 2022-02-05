@@ -10,7 +10,8 @@ K_p <- function(G, l, u) {
     }
 
     out <- apply(as.matrix(G[, g("lcm_Gp_A{l:u}")]), 1, prod)
-    trim <- 1 / pmin(0.001, 0.01^log(u - l))
+    trim <- quantile(out[out != 0], 0.99)
+    ## trim <- 1 / pmin(0.001, 0.01^log(u - l))
     pmin(out, trim)
 }
 
@@ -20,7 +21,8 @@ K_s <- function(G, l, u) {
     }
 
     out <- apply(as.matrix(G[, g("lcm_Gs_A{l:u}")]), 1, prod)
-    trim <- 1 / pmin(0.001, 0.01^log(u - l))
+    trim <- quantile(out[out != 0], 0.99)
+    ## trim <- 1 / pmin(0.001, 0.01^log(u - l))
     pmin(out, trim)
 }
 
@@ -30,7 +32,8 @@ H <- function(G, l, u) {
     }
 
     out <- apply(as.matrix(G[, g("lcm_G_M{l:u}")]), 1, prod)
-    trim <- 1 / pmin(0.001, 0.01^log(u - l))
+    trim <- quantile(out[out != 0], 0.99)
+    ## trim <- 1 / pmin(0.001, 0.01^log(u - l))
     pmin(out, trim)
 }
 

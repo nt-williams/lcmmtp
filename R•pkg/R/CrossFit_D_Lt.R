@@ -11,11 +11,7 @@ CrossFit_D_Lt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
         P_a  <- Task$augment(Folds$P(Task$augmented, v), t)                                   # line 8 __
 
         # mU indicates m with an underbar
-        if (t == Task$Npsem$tau) {
-            `(mU_t+1,H_M,t)` <- Task$Npsem$history("M", t)
-        } else {
-            `(mU_t+1,H_M,t)` <- c(g("lcm_med_{(t+1):Task$Npsem$tau}"), Task$Npsem$history("M", t))
-        }
+        `(mU_t+1,H_M,t)` <- c(g("lcm_med_{t:Task$Npsem$tau}"), Task$Npsem$history("M", t))
 
         P_a[[g("lcm_Q_L{t}")]] <- CrossFit(                                                   # line 9 __
             Tr_a[Tr_a[[g("lcm_med_{t}")]] == Tr_a[[Task$Npsem$M[t]]], ],                    # subset operation

@@ -47,18 +47,15 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
             )
         })
 
-        list(
-            theta = mean(vapply(comp, function(x) x$theta_v, FUN.VALUE = 1)),
-            lambda = mean(vapply(comp, function(x) x$lambda_v, FUN.VALUE = 1))
-        )
+        dat    <- merge(Task$augmented, bar_m)
+        theta  <-  mean(vapply(comp, function(x) x$theta_v, FUN.VALUE = 1))
+        lambda <-  mean(vapply(comp, function(x) x$lambda_v, FUN.VALUE = 1))
+        S <- (dat$lcm_D_Z1 - theta) * lambda + (dat$lcm_D_M1 - lambda) * theta
+
+        return(list(theta = theta, lambda = lambda, S = S))
     })
 
-    S <- Sum(
-        lapply(nuis, function(m) {
-            (Task$augmented$lcm_D_Z1 - m$theta)*m$lambda +
-                (Task$augmented$lcm_D_M1 - m$lambda)*m$theta
-        })
-    )
+    S <- rowSums(sapply(nuis, function(m)m$S))
 
     ans <- list(
         theta = sum(vapply(nuis, function(m) m$theta * m$lambda, 1)),
