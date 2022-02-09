@@ -30,8 +30,8 @@ lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
     Folds <- lcm_Folds$new(nrow(data), V)
 
     for (t in Npsem$tau:1) {
-        CrossFit_D_Lt   (Task, t, a_prime, a_star, Folds, lrnrs)
-        CrossFit_D_Zt_Mt(Task, t, a_prime, a_star, Folds, lrnrs)
+        CrossFit_D_Lt   (Task, t, a_prime[t], a_star[t], Folds, lrnrs)
+        CrossFit_D_Zt_Mt(Task, t, a_prime[t], a_star[t], Folds, lrnrs)
     }
 
     bar_M <- expand.grid(lapply(1:Npsem$tau, function(t) Task$unique_M()))

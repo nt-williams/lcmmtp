@@ -6,6 +6,7 @@ D_Zt <- function(P_a, t, tau) {
             `H_t,s` <- H(P_a, t, s)
             `Q_Z,s+1` <- P_a[[g("lcm_Q_Z{s+1}")]]
             `Q_L,s` <- P_a[[g("lcm_Q_L{s}")]]
+            ## browser()
             w <- `K'_t,s` * `H_t,s`
             w <- pmin(w, quantile(w, 0.99))
             w * (`Q_Z,s+1` - `Q_L,s`)
@@ -19,6 +20,7 @@ D_Zt <- function(P_a, t, tau) {
             `H_t,s-1` <- H(P_a, t, s - 1)
             `Q_Z,s` <- P_a[[g("lcm_Q_Z{s}")]]
             `Q_L,s` <- P_a[[g("lcm_Q_L{s}")]]
+            ## browser()
             w <- `K'_t,s` * `H_t,s-1`
             w <- pmin(w, quantile(w, 0.99))
             w * (`Q_L,s`- `Q_Z,s`)
