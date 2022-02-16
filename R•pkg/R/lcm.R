@@ -19,7 +19,7 @@
 #'     Y = "Y"
 #' )
 #'
-#' lcm(sim, 0, 0, Np, sl3::Lrnr_glm_fast$new(), 5)
+#' lcm(sim, c(0, 0), c(0, 0), Np, sl3::Lrnr_glm_fast$new(), 5)
 lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
     checkmate::assertDataFrame(data[, Npsem$all_vars()], any.missing = FALSE)
     checkmate::assertR6(Npsem, "lcm_Npsem")

@@ -34,5 +34,5 @@ Np <- lcm_Npsem$new(
     Y = "Y"
 )
 
-lcm(sim, 0, 0, Np, sl3::Lrnr_glm_fast$new(), 5)
+lcm(sim, c(0, 0), c(0, 0), Np, sl3::Lrnr_glm_fast$new(), 5)
 }

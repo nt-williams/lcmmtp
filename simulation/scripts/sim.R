@@ -42,14 +42,20 @@ simulate <- function(n, seed, V) {
 
     #V <- ifelse(n >= 1e4, 2, 10)
 
-    res_00 <- lcm::lcm(d, 0, 0, Np, sl, V)
-    res_11 <- lcm::lcm(d, 1, 1, Np, sl, V)
-    res_10 <- lcm::lcm(d, 1, 0, Np, sl, V)
+    res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, sl, V)
+    res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, sl, V)
+    res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, sl, V)
 
     write.csv(
         data.frame(
             seed = seed,
             n = n,
+            theta_00 = res_00$theta,
+            var_00 = var(res_00$S) / n,
+            theta_10 = res_10$theta,
+            var_10 = var(res_10$S) / n,
+            theta_11 = res_11$theta,
+            var_11 = var(res_11$S) / n,
             direct = res_10$theta - res_00$theta,
             var_direct = var(res_10$S - res_00$S) / n,
             indirect = res_11$theta - res_10$theta,

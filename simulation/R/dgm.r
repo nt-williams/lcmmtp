@@ -171,4 +171,3 @@ true <- function() {
 
     c(theta11, theta10, theta01, theta00)
 }
-true()
