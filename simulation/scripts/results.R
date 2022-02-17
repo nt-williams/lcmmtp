@@ -1,8 +1,5 @@
 library(tidyverse)
 
-# options(collapse_mask = "manip")
-# library(collapse)
-
 source("simulation/R/read•zip.R")
 source("simulation/R/dgm.r")
 
@@ -17,10 +14,6 @@ truth$direct <- truth$theta10 - truth$theta00
 truth$indirect <- truth$theta11 - truth$theta10
 truth$total <- truth$theta11 - truth$theta00
 
-# group_by(res, n) |>
-#     summarise(across(c("direct", "indirect", "total"), var),
-#               across(paste0("var_", c("direct", "indirect", "total")), mean))
-
 coverage <- function(est, var, truth) {
     mean(
         map_lgl(
@@ -32,8 +25,7 @@ coverage <- function(est, var, truth) {
 
 agg <-
     group_by(res, n) |>
-    summarise(across(c("direct", "indirect", "total"), mean, .names = "{.col}_theta"),
-              direct_bias = abs(mean(direct - truth$direct)),
+    summarise(direct_bias = abs(mean(direct - truth$direct)),
               indirect_bias = abs(mean(indirect - truth$indirect)),
               total_bias = abs(mean(total - truth$total)),
               direct_coverage = coverage(direct, var_direct, truth$direct),
@@ -43,7 +35,15 @@ agg <-
     pivot_longer(cols = starts_with(c("direct", "indirect", "total")),
                  names_to = c("effect", ".value"),
                  names_pattern = "(direct|indirect|total)_(.*)") |>
+    mutate(rootn_bias = sqrt(n) * bias, .before = coverage,
+           effect = stringr::str_to_title(effect)) |>
     arrange(n)
 
-ggplot(agg, aes(x = sqrt(n), y = bias * sqrt(n), color = effect)) +
-    geom_line()
+make_table <- function(data) {
+    data$n <- as.character(data$n)
+    data <- mutate(data, across(where(is.numeric), \(x) round(x, 3)))
+    data <- format(as.data.frame(data), nsmall = 2, digits = 2)
+    brew::brew("simulation/scripts/table.brew")
+}
+
+make_table(agg)
