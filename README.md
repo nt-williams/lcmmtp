@@ -7,5 +7,5 @@ R package and code for "Efficient and flexible causal mediation with time-varyin
 The R package can be installed with:
 
 ```r
-devtools::install_github("nt-williams/lcm/R•pkg")
+devtools::install_github("nt-williams/lcm/lcm")
 ```

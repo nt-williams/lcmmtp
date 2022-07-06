@@ -5,10 +5,10 @@
 # Produces data for simulations
 # -------------------------------------------------------------------------
 
-library(tidyverse)
-library(simcausal)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(simcausal))
 
-coefs <- readRDS("simulation/data/coefs.rds")
+coefs <- readRDS("_research/data/coefs.rds")
 
 ord_prob <- function(coefs_n, ...) {
     coefs <- coefs[[coefs_n]]

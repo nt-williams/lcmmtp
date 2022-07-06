@@ -1,13 +1,21 @@
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 
-source("simulation/R/read•zip.R")
-source("simulation/R/dgm.r")
+source("_research/dgm.r")
 
-progressr::handlers(global = TRUE)
+read_zip <- function(tar) {
+    files <- unzip(tar, list = TRUE)$Name
+    p <- progressr::progressor(along = 1:length(files))
+    purrr::map(files, function(file) {
+        p()
+        con <- unz(tar, file)
+        read.csv(con)
+    })
+}
 
-res <- map_dfr(c(`500` = 500, `1000` = 1000, `5000` = 5000, `1e4` = 1e4), function(n) {
-    bind_rows(read_zip(glue::glue("simulation/data/sims/sl-1-500-{n}-updated.zip")))
-}, .id = "n")
+res <- map_dfr(c(`500` = 500, `1000` = 1000, `5000` = 5000, `1e4` = 1e4),
+               function(n) {
+                   bind_rows(read_zip(glue::glue("_research/data/res-{n}.zip")))
+               }, .id = "n")
 
 truth <- true()
 truth$direct <- truth$theta10 - truth$theta00
@@ -22,6 +30,21 @@ coverage <- function(est, var, truth) {
         )
     )
 }
+
+group_by(res, n) |>
+    summarise(theta00_bias = abs(mean(theta_00 - truth$theta00)),
+              theta00_coverage = coverage(theta_00, var_00, truth$theta00),
+              theta10_bias = abs(mean(theta_10 - truth$theta10)),
+              theta10_coverage = coverage(theta_10, var_10, truth$theta10),
+              theta11_bias = abs(mean(theta_11 - truth$theta11)),
+              theta11_coverage = coverage(theta_11, var_00, truth$theta11)) |>
+    mutate(n = as.numeric(n)) |>
+    pivot_longer(cols = "theta_00",
+                 names_to = c("effect", ".value"),
+                 names_pattern = "(direct|indirect|total)_(.*)") |>
+    mutate(rootn_bias = sqrt(n) * bias, .before = coverage,
+           effect = stringr::str_to_title(effect)) |>
+    arrange(n)
 
 agg <-
     group_by(res, n) |>

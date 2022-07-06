@@ -7,7 +7,7 @@ D_Lt <- function(P_a, t, tau) {
 
             `Q_Z,s+1` <- P_a[[g("lcm_Q_Z{s+1}")]]
             `Q_L,s` <- P_a[[g("lcm_Q_L{s}")]]
-            ## browser()
+
             w <- `K'_t+1,s` * `H_t,s`
             w <- pmin(w, quantile(w, 0.99))
             w * (`Q_Z,s+1` - `Q_L,s`)
@@ -23,7 +23,7 @@ D_Lt <- function(P_a, t, tau) {
 
                 `Q_Z,s` <- P_a[[g("lcm_Q_Z{s}")]]
                 `Q_L,s` <- P_a[[g("lcm_Q_L{s}")]]
-                ## browser()
+
                 w <- `K'_t+1,s` * `H_t,s-1`
                 w <- pmin(w, quantile(w, 0.99))
                 w * (`Q_L,s`- `Q_Z,s`)
@@ -37,6 +37,4 @@ D_Lt <- function(P_a, t, tau) {
 
     # Formula (5) in paper
     summation_1 + summation_2 + `Q_L,t`
-
-
 }

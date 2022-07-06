@@ -16,7 +16,7 @@ D_Mt <- function(P_a, t, tau, M) {
             y_2 <- (as.numeric(P_a[[g("lcm_med_{s}")]] == P_a[[M[s]]]) *
                         P_a[[g("lcm_Q_M{s+1}")]]) -
                 P_a[[g("lcm_Q_M{s}")]]
-            ## browser()
+
             w <- `K*_t,s`
             w <- pmin(w, quantile(w, 0.99))
             w * y_1 * y_2
