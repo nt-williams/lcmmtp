@@ -17,6 +17,7 @@ if (id == "undefined" || id == "") id <- 1
 # )
 
 sl <- Lrnr_sal$new()
+sl <- sl3::Lrnr_hal9001$new()
 
 simulate <- function(n, seed, V) {
     d <- datagen(n, seed)
