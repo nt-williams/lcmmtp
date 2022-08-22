@@ -12,9 +12,13 @@ read_zip <- function(tar) {
     })
 }
 
-res <- map_dfr(c(`500` = 500, `1000` = 1000, `5000` = 5000, `1e4` = 1e4),
+res <- map_dfr(c(#`500` = 500,
+                 #`1000` = 1000,
+                 `5000` = 5000
+                 #, `1e4` = 1e4
+                 ),
                function(n) {
-                   bind_rows(read_zip(glue::glue("_research/data/res-{n}.zip")))
+                   bind_rows(read_zip(glue::glue("_research/data/res_{n}.zip")))
                }, .id = "n")
 
 truth <- true()

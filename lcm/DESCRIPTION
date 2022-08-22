@@ -25,7 +25,8 @@ Imports:
     origami,
     R6,
     sl3 (>= 1.4.4),
-    slider
+    slider, 
+    glmnet
 URL: https://github.com/nt-williams/lcm
 BugReports: https://github.com/nt-williams/lcm/issues
 RoxygenNote: 7.1.1

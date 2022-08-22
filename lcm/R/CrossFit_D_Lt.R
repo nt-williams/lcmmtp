@@ -1,4 +1,4 @@
-CrossFit_D_Lt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
+CrossFit_D_Lt <- function(Task, t, a_prime, a_star, Folds) {
     if (t == Task$Npsem$tau) {
         Task$augmented[[g("lcm_D_Z{t+1}")]] <- Task$augmented[[Task$Npsem$Y]]
         Task$augmented[[g("lcm_Q_Z{t+1}")]] <- Task$augmented[[Task$Npsem$Y]]
@@ -17,12 +17,12 @@ CrossFit_D_Lt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
             Tr_a[Tr_a[[g("lcm_med_{t}")]] == Tr_a[[Task$Npsem$M[t]]], ],                    # subset operation
             P_a, g("lcm_D_Z{t+1}"),
             `(mU_t+1,H_M,t)`,
-            ifelse(t == Task$Npsem$tau, Task$type, "continuous"), lrnrs
+            ifelse(t == Task$Npsem$tau, Task$type, "gaussian")#, lrnrs
         )
 
         g_t <- CrossFit(                                                                      # line 10 __
             Folds$Tr(Task$data, v), P_a,
-            Task$Npsem$A[t], Task$Npsem$history("A", t), "binomial", lrnrs
+            Task$Npsem$A[t], Task$Npsem$history("A", t), "binomial"#, lrnrs
         )
 
         g_t <- P_a[[Task$Npsem$A[t]]] * g_t + (1 - P_a[[Task$Npsem$A[t]]]) * (1 - g_t)
@@ -35,7 +35,7 @@ CrossFit_D_Lt <- function(Task, t, a_prime, a_star, Folds, lrnrs) {
         g_Mt <- CrossFit(                                                                     # line 11 __
             m_fit_data, P_a, "lcm_pseudo_m_fit",
             c(Task$Npsem$history("M", t), g("lcm_med_{t}")),
-            "binomial", lrnrs
+            "binomial"#, lrnrs
         )
 
         P_a[[g("lcm_Gp_A{t}")]] <- G(P_a[[Task$Npsem$A[t]]], g_t, a_prime)                    # line 12 __

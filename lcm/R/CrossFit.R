@@ -5,9 +5,8 @@
 #' @param y outcome variable name
 #' @param x covariate variable names
 #' @param type outcome variable type (i.e, "binomial", "continuous")
-#' @param lrnrs sl3 learners
-CrossFit <- function(Tr, P, y, x, type = c("binomial", "continuous"), lrnrs) {
-    fit <- Regress(Tr, y, x, match.arg(type), lrnrs)
+CrossFit <- function(Tr, P, y, x, type = c("binomial", "gaussian")) {
+    fit <- Regress(Tr, y, x, match.arg(type))#, lrnrs)
     Predict(fit, P)
 }
 
@@ -17,17 +16,17 @@ CrossFit <- function(Tr, P, y, x, type = c("binomial", "continuous"), lrnrs) {
 #' @param y name of outcome
 #' @param x names of covariates
 #' @param type outcome type
-#' @param lrnrs sl3 learners
-Regress <- function(Tr, y, x, type, lrnrs) {
-    task <- sl3::sl3_Task$new(
-        data = Tr,
-        covariates = x,
-        outcome = y,
-        id = "lcm_ID",
-        outcome_type = type
-    )
-
-    lrnrs$train(task)
+Regress <- function(Tr, y, x, type) {
+    glmnet3(Tr[, x, drop = FALSE], Tr[[y]], family = type)
+    # task <- sl3::sl3_Task$new(
+    #     data = Tr,
+    #     covariates = x,
+    #     outcome = y,
+    #     id = "lcm_ID",
+    #     outcome_type = type
+    # )
+    #
+    # lrnrs$train(task)
 }
 
 #' Predict from an sl3 fit
@@ -35,10 +34,11 @@ Regress <- function(Tr, y, x, type, lrnrs) {
 #' @param fit a sl3 fit
 #' @param P validation data
 Predict <- function(fit, P) {
-    task <- sl3::sl3_Task$new(
-        data = P,
-        covariates = fit$training_task$nodes$covariates
-    )
-
-    fit$predict(task)
+    predict.glmnet3(fit, P)
+    # task <- sl3::sl3_Task$new(
+    #     data = P,
+    #     covariates = fit$training_task$nodes$covariates
+    # )
+    #
+    # fit$predict(task)
 }
