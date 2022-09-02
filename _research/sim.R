@@ -1,22 +1,17 @@
 library(glue)
 source("_research/dgm.r")
-# source("_research/Lrnr_simple_hal.R")
 
 id <- Sys.getenv("SGE_TASK_ID")
 
 if (id == "undefined" || id == "") id <- 1
 
-# sl <- sl3::Lrnr_sl$new(
-#     learners = sl3::make_learner_stack(
-#         sl3::Lrnr_glm,
-#         sl3::Lrnr_earth,
-#         sl3::Lrnr_lightgbm,
-#         Lrnr_sal
-#     ),
-#     metalearners = sl3::Lrnr_nnls$new()
-# )
-
-# sl <- Lrnr_sal$new()
+sl <- sl3::Lrnr_sl$new(
+    learners = sl3::make_learner_stack(
+        sl3::Lrnr_glm,
+        sl3::Lrnr_lightgbm
+    ),
+    metalearners = sl3::Lrnr_nnls$new()
+)
 
 simulate <- function(n, seed, V) {
     d <- datagen(n, seed)
@@ -29,16 +24,9 @@ simulate <- function(n, seed, V) {
         Y = "Y"
     )
 
-    # sl <- sl3::Lrnr_hal9001$new(
-    #     lambda = seq(1 / n^2, 1 / sqrt(n), length.out = 50),
-    #     max_degree = 3, smoothness_order = 0
-    # )
-
-    # sl <- Lrnr_simple_hal$new()
-
-    res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, V)
-    res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, V)
-    res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, V)
+    res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, sl, V)
+    res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, sl, V)
+    res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, sl, V)
 
     write.csv(
         data.frame(

@@ -4,6 +4,7 @@
 #' @param Npsem An `lcm_Npsem` object mapping observed variables to the assumed NPSEM
 #' @param a_prime Value of a', 0 or 1.
 #' @param a_star Value of a*, 0 or 1.
+#' @param lrnrs sl3 learners
 #' @param V The number of folds for cross-fitting
 #'
 #' @return An object of class `lcm`
@@ -19,18 +20,18 @@
 #' )
 #'
 #' lcm(sim, c(0, 0), c(0, 0), Np, 5)
-lcm <- function(data, a_prime, a_star, Npsem, V) {
+lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
     checkmate::assertDataFrame(data[, Npsem$all_vars()], any.missing = FALSE)
-    # checkmate::assertR6(Npsem, "lcm_Npsem")
-    # checkmate::assertR6(lrnrs, "Lrnr_base")
+    checkmate::assertR6(Npsem, "lcm_Npsem")
+    checkmate::assertR6(lrnrs, "Lrnr_base")
     checkmate::assertNumber(V, lower = 1, upper = nrow(data) - 1)
 
     Task <- lcm_Task$new(data, Npsem)
     Folds <- lcm_Folds$new(nrow(data), V)
 
     for (t in Npsem$tau:1) {
-        CrossFit_D_Lt   (Task, t, a_prime[t], a_star[t], Folds)#, lrnrs)
-        CrossFit_D_Zt_Mt(Task, t, a_prime[t], a_star[t], Folds)#, lrnrs)
+        CrossFit_D_Lt   (Task, t, a_prime[t], a_star[t], Folds, lrnrs)
+        CrossFit_D_Zt_Mt(Task, t, a_prime[t], a_star[t], Folds, lrnrs)
     }
 
     bar_M <- expand.grid(lapply(1:Npsem$tau, function(t) Task$unique_M()))
