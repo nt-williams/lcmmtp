@@ -13,11 +13,12 @@ coefs <- readRDS("_research/data/coefs.rds")
 ord_prob <- function(coefs_n, ...) {
     coefs <- coefs[[coefs_n]]
     vars  <- data.frame(...)
-    lin_pred <- as.matrix(vars) %*% coefs
+    lin_pred <- model.matrix(~ .^2, data = vars)[, -1] %*% coefs
+    # lin_pred <- as.matrix(vars) %*% coefs
     probs <- exp(lin_pred) / (1 + rowSums(exp(lin_pred)))
     probs <- 0.8 * probs + 0.1
     probs <- cbind(probs, 1 - rowSums(probs))
-    if(nrow(probs) == 1) {
+    if (nrow(probs) == 1) {
         return(probs[1, ])
     }
     probs
@@ -33,15 +34,15 @@ D <- DAG.empty() +
     node("M", t = 1, distr = "rcat.b1",
          probs = ord_prob(4, Z[t], L[t], A[t])) +
     node("L", t = 2, distr = "rcat.b1",
-         probs = ord_prob(5, M[t-1], Z[t-1], L[t-1], A[t-1])) +
+         probs = ord_prob(5, M[t - 1], Z[t - 1], L[t - 1], A[t - 1])) +
     node("A", t = 2, distr = "rcat.b0",
-         probs = ord_prob(6, L[t], M[t-1], Z[t-1], L[t-1], A[t-1])) +
+         probs = ord_prob(6, L[t], M[t - 1], Z[t - 1], L[t - 1], A[t - 1])) +
     node("Z", t = 2, distr = "rcat.b1",
-         probs = ord_prob(7, L[t], A[t], M[t-1], Z[t-1], L[t-1], A[t-1])) +
+         probs = ord_prob(7, L[t], A[t], M[t - 1], Z[t - 1], L[t - 1], A[t - 1])) +
     node("M", t = 2, distr = "rcat.b1",
-         probs = ord_prob(8, Z[t], L[t], A[t], M[t-1], Z[t-1], L[t-1], A[t-1])) +
+         probs = ord_prob(8, Z[t], L[t], A[t], M[t - 1], Z[t - 1], L[t - 1], A[t - 1])) +
     node("Y", t = 3, distr = "rcat.b0",
-         probs = ord_prob(9, M[t-1], Z[t-1], L[t-1], A[t-1], M[t-2], Z[t-2], L[t-2], A[t-2]))
+         probs = ord_prob(9, M[t - 1], Z[t - 1], L[t - 1], A[t - 1], M[t - 2], Z[t - 2], L[t - 2], A[t - 2]))
 
 D <- set.DAG(D, vecfun = "ord_prob")
 
@@ -52,7 +53,6 @@ datagen <- function(n, seed) {
 }
 
 true <- function() {
-
     data_points <- expand.grid(L_1 = 1:3, A_1 = 0:1, Z_1 = 1:3, M_1 = 1:3, L_2 = 1:3, A_2 = 0:1, Z_2 = 1:3, M_2 = 1:3)
 
     datx <- mutate(data_points, QL2 = ord_prob(9, M_2, Z_2, L_2, A_2, M_1, Z_1, L_1, A_1)[, 2])
