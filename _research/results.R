@@ -2,7 +2,7 @@ suppressPackageStartupMessages(library(tidyverse))
 
 source("_research/dgm.r")
 
-framework <- "hal"
+framework <- "sl3"
 
 read_zip <- function(tar) {
     files <- unzip(tar, list = TRUE)$Name
@@ -34,11 +34,13 @@ coverage <- function(est, var, truth) {
 }
 
 agg <-
-    filter(res, abs(direct) < 1) |>
+    filter(res, abs(direct) < 1, abs(indirect) < 1) |>
     group_by(n) |>
     summarise(direct_bias = abs(mean(direct - truth$direct)),
               indirect_bias = abs(mean(indirect - truth$indirect)),
               total_bias = abs(mean(total - truth$total)),
+              across(c("direct", "indirect", "total"), var, .names = "{.col}_nvar"),
+              across(c("var_direct", "var_indirect", "var_total"), mean, .names = "{gsub('var_', '', .col)}_meanvar"),
               direct_coverage = coverage(direct, var_direct, truth$direct),
               indirect_coverage = coverage(indirect, var_indirect, truth$indirect),
               total_coverage = coverage(total, var_total, truth$total)) |>
@@ -47,8 +49,10 @@ agg <-
                  names_to = c("effect", ".value"),
                  names_pattern = "(direct|indirect|total)_(.*)") |>
     mutate(rootn_bias = sqrt(n) * bias, .before = coverage,
+           across(c("nvar", "meanvar"), \(x) x * n),
            effect = stringr::str_to_title(effect)) |>
-    arrange(n)
+    arrange(n) |>
+    select(n, effect, bias, rootn_bias, nvar, coverage)
 
 make_table <- function(data) {
     data$n <- as.character(data$n)
