@@ -24,8 +24,8 @@ Imports:
     glue,
     origami,
     R6,
-    slider, 
-    glmnet
+    sl3 (>= 1.4.4),
+    slider
 URL: https://github.com/nt-williams/lcm
 BugReports: https://github.com/nt-williams/lcm/issues
 RoxygenNote: 7.1.1
@@ -34,3 +34,5 @@ Suggests:
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
+Remotes:  
+    tlverse/sl3

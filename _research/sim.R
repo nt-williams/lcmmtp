@@ -5,7 +5,7 @@ id <- Sys.getenv("SGE_TASK_ID")
 
 if (id == "undefined" || id == "") id <- 1
 
-framework <- "sl"
+framework <- "hal"
 
 simulate <- function(n, seed, V) {
     d <- datagen(n, seed)
@@ -53,7 +53,7 @@ simulate <- function(n, seed, V) {
             total = res_11$theta - res_00$theta,
             var_total = var(res_11$S - res_00$S) / n
         ),
-        glue("_research/data/{id}-{n}-dgp2.csv"),
+        glue("_research/data/{id}-{n}-dgp2-bad.csv"),
         row.names = FALSE
     )
 }
