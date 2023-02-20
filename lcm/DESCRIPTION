@@ -1,7 +1,7 @@
 Package: lcm
 Type: Package
 Title: Nonparametric Longitudinal Causal Mediation
-Version: 0.1.0
+Version: 0.1.0.5000
 Authors@R: 
     c(person(given = "Nicholas",
              family = "Williams",
@@ -25,8 +25,7 @@ Imports:
     origami,
     R6,
     sl3 (>= 1.4.4),
-    slider, 
-    glmnet
+    slider
 URL: https://github.com/nt-williams/lcm
 BugReports: https://github.com/nt-williams/lcm/issues
 RoxygenNote: 7.1.1

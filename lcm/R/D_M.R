@@ -18,7 +18,7 @@ D_Mt <- function(P_a, t, tau, M) {
                 P_a[[g("lcm_Q_M{s}")]]
 
             w <- `K*_t,s`
-            w <- pmin(w, quantile(w, 0.99))
+            # w <- pmin(w, quantile(w, 0.99))
             w * y_1 * y_2
         })
     )
