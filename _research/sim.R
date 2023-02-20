@@ -5,13 +5,7 @@ id <- Sys.getenv("SGE_TASK_ID")
 
 if (id == "undefined" || id == "") id <- 1
 
-sl <- sl3::Lrnr_sl$new(
-    learners = sl3::make_learner_stack(
-        sl3::Lrnr_glm,
-        sl3::Lrnr_lightgbm
-    ),
-    metalearners = sl3::Lrnr_nnls$new()
-)
+framework <- "hal"
 
 simulate <- function(n, seed, V) {
     d <- datagen(n, seed)
@@ -24,9 +18,23 @@ simulate <- function(n, seed, V) {
         Y = "Y"
     )
 
-    res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, sl, V)
-    res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, sl, V)
-    res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, sl, V)
+    if (framework == "sl") {
+        sl <- sl3::Lrnr_sl$new(
+            learners = sl3::make_learner_stack(
+                sl3::Lrnr_glm,
+                sl3::Lrnr_lightgbm
+            ),
+            metalearners = sl3::Lrnr_nnls$new()
+        )
+
+        res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, sl, V)
+        res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, sl, V)
+        res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, sl, V)
+    } else {
+        res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, V)
+        res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, V)
+        res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, V)
+    }
 
     write.csv(
         data.frame(
@@ -45,7 +53,7 @@ simulate <- function(n, seed, V) {
             total = res_11$theta - res_00$theta,
             var_total = var(res_11$S - res_00$S) / n
         ),
-        glue("_research/data/{id}-{n}.csv"),
+        glue("_research/data/{id}-{n}-dgp2-bad.csv"),
         row.names = FALSE
     )
 }
