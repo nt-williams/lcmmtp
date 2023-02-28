@@ -8,13 +8,22 @@
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(simcausal))
 
-coefs <- readRDS("_research/data/coefs.rds")
+coefs <- readRDS("_research/data/coefs2.rds")
+coefs_old <- readRDS("_research/data/coefs_old.rds")
+
+for (i in c(2, 4, 6, 8)) {
+    coefs[[i]] <- coefs_old[[i]]
+}
 
 ord_prob <- function(coefs_n, ...) {
     coefs <- coefs[[coefs_n]]
     vars  <- data.frame(...)
-    lin_pred <- model.matrix(~ .^2, data = vars)[, -1] %*% coefs
-    # lin_pred <- as.matrix(vars) %*% coefs
+
+    if (coefs_n %in% c(2, 4, 6, 8)) {
+        lin_pred <- as.matrix(vars) %*% coefs
+    } else {
+        lin_pred <- model.matrix(~ .^2, data = vars)[, -1] %*% coefs
+    }
     probs <- exp(lin_pred) / (1 + rowSums(exp(lin_pred)))
     probs <- 0.8 * probs + 0.1
     probs <- cbind(probs, 1 - rowSums(probs))

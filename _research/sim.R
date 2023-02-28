@@ -1,5 +1,6 @@
 library(glue)
 source("_research/dgm.r")
+source("_research/glmnet3.R")
 
 id <- Sys.getenv("SGE_TASK_ID")
 
@@ -26,15 +27,13 @@ simulate <- function(n, seed, V) {
             ),
             metalearners = sl3::Lrnr_nnls$new()
         )
-
-        res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, sl, V)
-        res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, sl, V)
-        res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, sl, V)
     } else {
-        res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, V)
-        res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, V)
-        res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, V)
+        sl <- Lrnr_glmnet3$new()
     }
+
+    res_00 <- lcm::lcm(d, c(0, 0), c(0, 0), Np, sl, V)
+    res_11 <- lcm::lcm(d, c(1, 1), c(1, 1), Np, sl, V)
+    res_10 <- lcm::lcm(d, c(1, 1), c(0, 0), Np, sl, V)
 
     write.csv(
         data.frame(
@@ -53,7 +52,7 @@ simulate <- function(n, seed, V) {
             total = res_11$theta - res_00$theta,
             var_total = var(res_11$S - res_00$S) / n
         ),
-        glue("_research/data/{id}-{n}-dgp2-bad.csv"),
+        glue("_research/data/{id}-{n}-dgp4.csv"),
         row.names = FALSE
     )
 }

@@ -2,7 +2,7 @@ suppressPackageStartupMessages(library(tidyverse))
 
 source("_research/dgm.r")
 
-framework <- "hal"
+framework <- "sl3"
 
 read_zip <- function(tar) {
     files <- unzip(tar, list = TRUE)$Name
@@ -16,7 +16,7 @@ read_zip <- function(tar) {
 
 res <- map_dfr(c(`500` = 500, `1000` = 1000, `5000` = 5000),
                function(n) {
-                   bind_rows(read_zip(glue::glue("_research/data/{framework}_{n}_dgp2_bad.zip")))
+                   bind_rows(read_zip(glue::glue("_research/data/{framework}_{n}_dgp4.zip")))
                }, .id = "n")
 
 truth <- true()
