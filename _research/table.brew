@@ -20,9 +20,9 @@ printTab <- function(data) {
 \begin{table}[H]
 \caption{Simulation results.}
 \centering\footnotesize
-\begin{tabular}[t]{clccccccc}
+\begin{tabular}[t]{clcccccccc}
 \toprule
-$n$ & Estimand & $|\text{Bias}|$ & $\sqrt{n} \times |\text{Bias}|$ & $n \times \text{Var.} $ & 95\% CI Coverage \\
+$n$ & Estimand & $|\text{Bias}|$ & $\sqrt{n} \times |\text{Bias}|$ & $n \times \text{Var.}$ & $n \times \text{MSE}$ & 95\% CI Coverage \\
 \midrule
 <%=printTab(data)%>
 \bottomrule
