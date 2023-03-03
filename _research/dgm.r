@@ -8,22 +8,30 @@
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(simcausal))
 
-coefs <- readRDS("_research/data/coefs2.rds")
+coefs <- readRDS("_research/data/coefs3.rds")
 coefs_old <- readRDS("_research/data/coefs_old.rds")
 
-for (i in c(2, 4, 6, 8)) {
-    coefs[[i]] <- coefs_old[[i]]
-}
+# for (i in c(2, 4, 6, 8)) {
+#     coefs[[i]] <- coefs_old[[i]]
+# }
 
 ord_prob <- function(coefs_n, ...) {
     coefs <- coefs[[coefs_n]]
     vars  <- data.frame(...)
+    vars <- mutate(vars, across(any_of(c("L_1", "Z_1", "M_1", "L_2", "Z_2", "M_2")), as.factor))
 
-    if (coefs_n %in% c(2, 4, 6, 8)) {
+    # if (coefs_n %in% c(2, 4, 6, 8)) {
+    #     lin_pred <- as.matrix(vars) %*% coefs
+    # } else {
+    #     browser()
+    #     lin_pred <- model.matrix(~ .^2, data = vars)[, -1] %*% coefs
+    # }
+    if (coefs_n == 1) {
         lin_pred <- as.matrix(vars) %*% coefs
     } else {
-        lin_pred <- model.matrix(~ .^2, data = vars)[, -1] %*% coefs
+        lin_pred <- model.matrix(~ .^2, data = vars) %*% coefs
     }
+
     probs <- exp(lin_pred) / (1 + rowSums(exp(lin_pred)))
     probs <- 0.8 * probs + 0.1
     probs <- cbind(probs, 1 - rowSums(probs))
@@ -58,7 +66,7 @@ D <- set.DAG(D, vecfun = "ord_prob")
 datagen <- function(n, seed) {
     data <- sim(D, n = as.integer(n), rndseed = seed)
     names(data)[substr(names(data), 1, 1) == 'Y'] <- 'Y'
-    data
+    mutate(data, across(c("L_1", "Z_1", "M_1", "L_2", "Z_2", "M_2"), as.factor))
 }
 
 true <- function() {
