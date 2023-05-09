@@ -1,37 +1,28 @@
-#' Causal Mediation with Longitudinal Mediators, Treatments, and Confounders
+#' Causal Mediation with Longitudinal Data Using Modified Treatment Policies
 #'
 #' @param data A data frame
-#' @param Npsem An `lcm_Npsem` object mapping observed variables to the assumed NPSEM
+#' @param vars An `lcm_Vars` object mapping observed variables to the assumed NPSEM
 #' @param a_prime Value of a', 0 or 1.
 #' @param a_star Value of a*, 0 or 1.
-#' @param lrnrs sl3 learners
-#' @param V The number of folds for cross-fitting
+#' @param learners
+#' @param folds The number of folds for cross-fitting
 #'
 #' @return An object of class `lcm`
 #' @export
 #'
 #' @examples
-#' Np <- lcm_Npsem$new(
-#'     L = list(c("L_1"), c("L_2")),
-#'     A = c("A_1", "A_2"),
-#'     Z = list(c("Z_1"), c("Z_2")),
-#'     M = c("M_1", "M_2"),
-#'     Y = "Y"
-#' )
-#'
-#' lcm(sim, c(0, 0), c(0, 0), Np, 5)
-lcm <- function(data, a_prime, a_star, Npsem, lrnrs, V) {
+lcmmtp <- function(data, a_prime, a_star, Npsem, learners, folds) {
     checkmate::assertDataFrame(data[, Npsem$all_vars()], any.missing = FALSE)
-    checkmate::assertR6(Npsem, "lcm_Npsem")
-    checkmate::assertR6(lrnrs, "Lrnr_base")
-    checkmate::assertNumber(V, lower = 1, upper = nrow(data) - 1)
+    checkmate::assertR6(Npsem, "lcm_Vars")
+    checkmate::assertNumber(folds, lower = 1, upper = nrow(data) - 1)
+    require("mlr3superlearner")
 
     Task <- lcm_Task$new(data, Npsem)
-    Folds <- lcm_Folds$new(nrow(data), V)
+    Folds <- lcm_Folds$new(nrow(data), folds)
 
     for (t in Npsem$tau:1) {
-        CrossFit_D_Lt   (Task, t, a_prime[t], a_star[t], Folds, lrnrs)
-        CrossFit_D_Zt_Mt(Task, t, a_prime[t], a_star[t], Folds, lrnrs)
+        CrossFit_D_Lt   (Task, t, a_prime[t], a_star[t], Folds, learners)
+        CrossFit_D_Zt_Mt(Task, t, a_prime[t], a_star[t], Folds, learners)
     }
 
     bar_M <- expand.grid(lapply(1:Npsem$tau, function(t) Task$unique_M()))

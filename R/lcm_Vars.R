@@ -1,8 +1,8 @@
-#' R6 class for an lcm_Npsem
+#' R6 class for an lcm_Vars
 #'
 #' @export
-lcm_Npsem <- R6::R6Class(
-    "lcm_Npsem",
+lcm_Vars <- R6::R6Class(
+    "lcm_Vars",
     public = list(
         W = NULL,
         L = NULL,
