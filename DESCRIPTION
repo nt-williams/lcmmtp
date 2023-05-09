@@ -1,6 +1,6 @@
-Package: lcm
+Package: lcmmtp
 Type: Package
-Title: Nonparametric Longitudinal Causal Mediation
+Title: Nonparametric Longitudinal Causal Mediation Using Modified Treatment Policies
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Nicholas",
@@ -10,11 +10,11 @@ Authors@R:
              comment = c(ORCID = "0000-0002-1378-4831")),
       person(given = "Iván", 
              family = "Díaz", 
-             email = "ild2005@med.cornell.edu",
+             email = "ivan.diaz@nyulangone.org",
              role = c("aut", "cph"),
              comment = c(ORCID = "0000-0001-9056-2047")))
 Maintainer: Nick Williams <ntwilliams.personal@gmail.com>
-Description: Nonparametric longitudinal causal mediation.
+Description: Nonparametric longitudinal causal mediation using modified treatment policies.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -22,17 +22,17 @@ Imports:
     checkmate,
     data.table,
     glue,
+    mlr3superlearner (>= 0.1.0),
     origami,
     R6,
-    sl3 (>= 1.4.4),
     slider
-URL: https://github.com/nt-williams/lcm
-BugReports: https://github.com/nt-williams/lcm/issues
+URL: https://github.com/nt-williams/lcmmtp
+BugReports: https://github.com/nt-williams/lcmmtp/issues
 RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
-Remotes:  
-    tlverse/sl3
+Remotes: 
+    nt-williams/mlr3superlearner

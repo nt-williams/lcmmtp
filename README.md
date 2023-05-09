@@ -1,13 +1,13 @@
-## lcm
 
-R package and code for "Efficient and flexible causal mediation with time-varying mediators, treatments, and confounders."
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-### Installation
+# lcmmtp
 
-The main R package can be installed with:
+<!-- badges: start -->
 
-```r
-devtools::install_github("nt-williams/lcm/lcm")
-```
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
 
-The binary version of the package using HAL is `lcm_0.1.0.5000.tar.gz`. The binary version of the package with incorrect model specification at time one is `lcm_0.1.0.6666.tar.gz`.
+> Efficient and flexible causal mediation with longitudinal mediators,
+> treatments, and confounders using modified treatment policies
