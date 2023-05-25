@@ -62,13 +62,5 @@ lcmmtp_Task <- R6::R6Class(
             if (all(y == 1 | y == 0)) return("binomial")
             "continuous"
         }
-        # for now, assuming no censoring
-        # shift_cens = function(data, cens) {
-        #     out <- as.list(data)
-        #     for (ce in cens) {
-        #         out[[ce]] <- 1
-        #     }
-        #     as.data.frame(out, check.names = FALSE)
-        # },
     )
 )
