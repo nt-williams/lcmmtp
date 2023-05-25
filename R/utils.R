@@ -4,16 +4,18 @@ G <- function(var, g, level) {
     as.numeric(var == level) / g #b(g)
 }
 
+# for now, assume not a survival outcome
+density_ratios <- function(pred, risk = TRUE) {
+    (pred * cens * risk) / (1 - pmin(pred, 0.999))
+}
+
 K_p <- function(G, l, u) {
     if (l > u) {
         return(rep(1, nrow(G)))
     }
 
-    out <- apply(as.matrix(G[, g("lcm_Gp_A{l:u}")]), 1, prod)
+    out <- apply(as.matrix(G[, g("lcmmtp_Gp_A{l:u}")]), 1, prod)
     out
-    # trim <- quantile(out[out != 0], 0.99)
-    # ## trim <- 1 / pmin(0.001, 0.01^log(u - l))
-    # pmin(out, trim)
 }
 
 K_s <- function(G, l, u) {
@@ -21,11 +23,8 @@ K_s <- function(G, l, u) {
         return(rep(1, nrow(G)))
     }
 
-    out <- apply(as.matrix(G[, g("lcm_Gs_A{l:u}")]), 1, prod)
+    out <- apply(as.matrix(G[, g("lcmmtp_Gs_A{l:u}")]), 1, prod)
     out
-    # trim <- quantile(out[out != 0], 0.99)
-    # ## trim <- 1 / pmin(0.001, 0.01^log(u - l))
-    # pmin(out, trim)
 }
 
 H <- function(G, l, u) {
@@ -33,11 +32,8 @@ H <- function(G, l, u) {
         return(rep(1, nrow(G)))
     }
 
-    out <- apply(as.matrix(G[, g("lcm_G_M{l:u}")]), 1, prod)
+    out <- apply(as.matrix(G[, g("lcmmtp_G_M{l:u}")]), 1, prod)
     out
-    # trim <- quantile(out[out != 0], 0.99)
-    # ## trim <- 1 / pmin(0.001, 0.01^log(u - l))
-    # pmin(out, trim)
 }
 
 Sum <- function(x) Reduce(`+`, x)

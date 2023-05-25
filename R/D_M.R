@@ -8,14 +8,14 @@ D_Mt <- function(P_a, t, tau, M) {
                 y_1 <- rep(1, nrow(P_a))
             } else {
                 y_1 <- apply(
-                    P_a[, g("lcm_med_{t:(s-1)}"), drop = FALSE] == P_a[, M[t:(s - 1)], drop = FALSE]
+                    P_a[, g("lcmmtp_med_{t:(s-1)}"), drop = FALSE] == P_a[, M[t:(s - 1)], drop = FALSE]
                     , 1, prod
                 )
             }
 
-            y_2 <- (as.numeric(P_a[[g("lcm_med_{s}")]] == P_a[[M[s]]]) *
-                        P_a[[g("lcm_Q_M{s+1}")]]) -
-                P_a[[g("lcm_Q_M{s}")]]
+            y_2 <- (as.numeric(P_a[[g("lcmmtp_med_{s}")]] == P_a[[M[s]]]) *
+                        P_a[[g("lcmmtp_Q_M{s+1}")]]) -
+                P_a[[g("lcmmtp_Q_M{s}")]]
 
             w <- `K*_t,s`
             # w <- pmin(w, quantile(w, 0.99))
@@ -23,7 +23,7 @@ D_Mt <- function(P_a, t, tau, M) {
         })
     )
 
-    `Q_M,t` <- P_a[[g("lcm_Q_M{t}")]]
+    `Q_M,t` <- P_a[[g("lcmmtp_Q_M{t}")]]
 
     summation_1 + `Q_M,t`# Formula (7)
 }

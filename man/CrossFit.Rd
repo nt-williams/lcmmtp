@@ -4,7 +4,7 @@
 \alias{CrossFit}
 \title{Perform Cross-fitting}
 \usage{
-CrossFit(Tr, P, y, x, type = c("binomial", "continuous"), lrnrs)
+CrossFit(Tr, P, y, x, type = c("binomial", "gaussian"), learners)
 }
 \arguments{
 \item{Tr}{training data}
@@ -16,8 +16,6 @@ CrossFit(Tr, P, y, x, type = c("binomial", "continuous"), lrnrs)
 \item{x}{covariate variable names}
 
 \item{type}{outcome variable type (i.e, "binomial", "continuous")}
-
-\item{lrnrs}{sl3 learners}
 }
 \description{
 Perform Cross-fitting

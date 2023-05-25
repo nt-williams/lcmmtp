@@ -9,23 +9,12 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(simcausal))
 
 coefs <- readRDS("_research/data/coefs3.rds")
-coefs_old <- readRDS("_research/data/coefs_old.rds")
-
-# for (i in c(2, 4, 6, 8)) {
-#     coefs[[i]] <- coefs_old[[i]]
-# }
 
 ord_prob <- function(coefs_n, ...) {
     coefs <- coefs[[coefs_n]]
     vars  <- data.frame(...)
     vars <- mutate(vars, across(any_of(c("L_1", "Z_1", "M_1", "L_2", "Z_2", "M_2")), as.factor))
 
-    # if (coefs_n %in% c(2, 4, 6, 8)) {
-    #     lin_pred <- as.matrix(vars) %*% coefs
-    # } else {
-    #     browser()
-    #     lin_pred <- model.matrix(~ .^2, data = vars)[, -1] %*% coefs
-    # }
     if (coefs_n == 1) {
         lin_pred <- as.matrix(vars) %*% coefs
     } else {
@@ -128,8 +117,7 @@ true <- function() {
                pM2 = case_when(
                    M_2 == 1 ~ pM2[, 1],
                    M_2 == 2 ~ pM2[, 2],
-                   M_2 == 3 ~ pM2[, 3]#,
-                   #M_2 == 4 ~ pM2[, 4]
+                   M_2 == 3 ~ pM2[, 3]
                ),
                pZ2 = case_when(
                    Z_2 == 1 ~ pZ2[, 1],
@@ -155,8 +143,7 @@ true <- function() {
             pM1 = case_when(
                 M_1 == 1 ~ pM1[, 1],
                 M_1 == 2 ~ pM1[, 2],
-                M_1 == 3 ~ pM1[, 3]#,
-                #M_1 == 4 ~ pM1[, 4]
+                M_1 == 3 ~ pM1[, 3]
             ),
             pZ1 = case_when(
                 Z_1 == 1 ~ pZ1[, 1],
