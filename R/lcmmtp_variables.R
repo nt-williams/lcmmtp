@@ -54,7 +54,7 @@ lcmmtp_variables <- R6::R6Class(
         },
         #' Return the names of all variables
         all_vars = function() {
-            c(self$W, unlist(self$L), self$A, unlist(self$Z), self$M, self$Y)
+            c(self$W, unlist(self$L), self$A, unlist(self$Z), self$M, self$risk, self$Y)
         }
     ),
     private = list(
