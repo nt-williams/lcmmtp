@@ -69,6 +69,19 @@ lcmmtp_Task <- R6::R6Class(
             }
 
             data[[vars$risk[t - 1]]] == 1 & !is.na(data[[vars$risk[t - 1]]])
+        },
+        censored = function(data, t, lag = FALSE) {
+            if (is.null(vars$cens)) {
+                return(rep(TRUE, nrow(data)))
+            }
+
+            if (!lag || t == 1) {
+                return(data[[vars$cens[t]]] == 1)
+            }
+
+            if (lag && t > 1) {
+                return(data[[vars$cens[t - 1]]] == 1)
+            }
         }
     ),
     private = list(
