@@ -13,7 +13,7 @@
 #' @examples
 lcmmtp <- function(data, vars, d_prime, d_star, learners, folds) {
     checkmate::assertDataFrame(data[, vars$all_vars()], any.missing = FALSE)
-    checkmate::assertR6(vars, "lcm_Vars")
+    checkmate::assertR6(vars, "lcmmtp_variables")
     checkmate::assertNumber(folds, lower = 1, upper = nrow(data) - 1)
     checkmate::assertFunction(d_prime)
     checkmate::assertFunction(d_star)

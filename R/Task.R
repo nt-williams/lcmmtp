@@ -11,11 +11,19 @@ lcmmtp_Task <- R6::R6Class(
         n = NULL,
         type = NULL,
         initialize = function(data, vars, d_prime, d_star) {
-            self$data <- data.table::as.data.table(data[, vars$all_vars()])
+            tmp <- data.table::copy(data)
+            if (!is.null(vars$risk)) {
+                for (y in c(vars$risk, vars$Y)) {
+                    data.table::set(tmp,
+                                    j = y,
+                                    value = private$convert_to_surv(tmp[[y]]))
+                }
+            }
+            self$data <- data.table::as.data.table(tmp[, vars$all_vars()])
             self$data[["lcmmtp_ID"]] <- seq.int(nrow(self$data))
             self$augmented <- self$data
             self$vars <- vars$clone()
-            self$n <- nrow(data)
+            self$n <- nrow(self$data)
             self$type <- private$check_type()
             self$shifted_aprime <- self$shift_trt(self$data, self$vars$A, d_prime)
             self$shifted_astar <- self$shift_trt(self$data, self$vars$A, d_star)
@@ -50,6 +58,17 @@ lcmmtp_Task <- R6::R6Class(
                 data[[a]] <- .f(data, a)
             }
             data
+        },
+        at_risk = function(data, t) {
+            if (is.null(vars$risk)) {
+                return(rep(TRUE, nrow(data)))
+            }
+
+            if (t == 1) {
+                return(rep(TRUE, nrow(data)))
+            }
+
+            data[[vars$risk[t - 1]]] == 1 & !is.na(data[[vars$risk[t - 1]]])
         }
     ),
     private = list(
@@ -61,14 +80,10 @@ lcmmtp_Task <- R6::R6Class(
             checkmate::assertNumeric(y)
             if (all(y == 1 | y == 0)) return("binomial")
             "continuous"
+        },
+        convert_to_surv = function(x) {
+            data.table::fcase(x == 0, 1,
+                              x == 1, 0)
         }
-        # for now, assuming no censoring
-        # shift_cens = function(data, cens) {
-        #     out <- as.list(data)
-        #     for (ce in cens) {
-        #         out[[ce]] <- 1
-        #     }
-        #     as.data.frame(out, check.names = FALSE)
-        # },
     )
 )
