@@ -1,8 +1,8 @@
-#' R6 class for an lcm_Vars
+#' R6 class for an lcmmtp_variables
 #'
 #' @export
-lcm_Vars <- R6::R6Class(
-    "lcm_Vars",
+lcmmtp_variables <- R6::R6Class(
+    "lcmmtp_variables",
     public = list(
         W = NULL,
         L = NULL,
@@ -10,6 +10,7 @@ lcm_Vars <- R6::R6Class(
         M = NULL,
         Z = NULL,
         Y = NULL,
+        risk = NULL,
         tau = NULL,
         initialize = function(W, L, A, Z, M, Y) {
             checkmate::assertCharacter(A)
@@ -21,7 +22,11 @@ lcm_Vars <- R6::R6Class(
             }
 
             checkmate::assertCharacter(M, len = self$tau)
-            checkmate::assertCharacter(Y, len = 1)
+            if (length(Y) > 1) {
+                checkmate::assertCharacter(Y, len = self$tau)
+            } else {
+                checkmate::assertCharacter(Y, len = 1)
+            }
             checkmate::assertList(L, types = "character", len = self$tau)
             checkmate::assertList(Z, types = c("character", "null"), len = self$tau)
 
@@ -29,7 +34,12 @@ lcm_Vars <- R6::R6Class(
             self$A <- A
             self$Z <- Z
             self$M <- M
-            self$Y <- Y
+
+            self$Y <- Y[length(Y)]
+            if (length(Y) > 1) {
+                self$risk <- Y[1:(length(Y) - 1)]
+            }
+            invisible()
         },
         #' Get all parent nodes for a variable
         history = function(var = c("L", "A", "Z", "M", "Y"), t) {

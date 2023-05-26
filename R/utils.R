@@ -1,12 +1,12 @@
 g <- glue::glue
 
-G <- function(var, g, level) {
-    as.numeric(var == level) / g #b(g)
+G <- function(var, g, level, risk = TRUE) {
+    (as.numeric(var == level) * risk) / g #b(g)
 }
 
 # for now, assume not a survival outcome
 density_ratios <- function(pred, risk = TRUE) {
-    (pred * cens * risk) / (1 - pmin(pred, 0.999))
+    (pred * risk) / (1 - pmin(pred, 0.999))
 }
 
 K_p <- function(G, l, u) {
@@ -41,3 +41,10 @@ Sum <- function(x) Reduce(`+`, x)
 b <- function(x) {
     pmax(x, .01)
 }
+
+convert_to_surv <- function(x) {
+    data.table::fcase(x == 0, 1,
+                      x == 1, 0)
+}
+
+

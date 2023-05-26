@@ -50,6 +50,17 @@ lcmmtp_Task <- R6::R6Class(
                 data[[a]] <- .f(data, a)
             }
             data
+        },
+        at_risk = function(data, t) {
+            if (is.null(vars$risk)) {
+                return(rep(TRUE, nrow(data)))
+            }
+
+            if (t == 1) {
+                return(rep(TRUE, nrow(data)))
+            }
+
+            data[[vars$risk[t - 1]]] == 1 & !is.na(data[[vars$risk[t - 1]]])
         }
     ),
     private = list(
