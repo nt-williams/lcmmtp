@@ -27,7 +27,6 @@ CrossFit_D_Lt <- function(Task, t, Folds, lrnrs) {
             lrnrs
         )
         P_a[[g("lcmmtp_Q_L{t}")]][!r] <- 0
-        # P_a[[g("lcmmtp_Q_L{t}")]][!o] <- -999
 
         Tr_Ap <- Task$stack_data(Folds$Tr(Task$data, v),
                                  Folds$Tr(Task$shifted_aprime, v), t)

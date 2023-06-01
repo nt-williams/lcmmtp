@@ -6,7 +6,6 @@ G <- function(var, g, level, risk = TRUE, cens = TRUE) {
     out
 }
 
-# for now, assume not a survival outcome
 density_ratios <- function(pred, risk = TRUE, cens = TRUE) {
     (pred * risk * cens) / (1 - pmin(pred, 0.999))
 }

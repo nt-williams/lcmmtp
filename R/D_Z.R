@@ -34,12 +34,8 @@ D_Zt <- function(P_a, t, tau) {
         })
     )
 
-    ## if(t == 1) browser()
-
     `Q_Z,t` <- P_a[[g("lcmmtp_Q_Z{t}")]]
 
     # Formula (6)
-    out <- summation_1 + summation_2 + `Q_Z,t`
-    # out[is.na(out)] <- 0
-    out
+    summation_1 + summation_2 + `Q_Z,t`
 }

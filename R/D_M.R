@@ -27,7 +27,6 @@ D_Mt <- function(P_a, t, tau, M) {
 
     `Q_M,t` <- P_a[[g("lcmmtp_Q_M{t}")]]
 
-    out <- summation_1 + `Q_M,t`# Formula (7)
-    # out[is.na(out)] <- 0
-    out
+    # Formula (7)
+    summation_1 + `Q_M,t`
 }

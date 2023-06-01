@@ -42,7 +42,5 @@ D_Lt <- function(P_a, t, tau) {
     `Q_L,t` <- P_a[[g("lcmmtp_Q_L{t}")]]
 
     # Formula (5) in paper
-    out <- summation_1 + summation_2 + `Q_L,t`
-    # out[is.na(out)] <- 0
-    out
+    summation_1 + summation_2 + `Q_L,t`
 }
