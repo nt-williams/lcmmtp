@@ -1,6 +1,6 @@
-# R6 class for a lcmmtp_Task
-lcmmtp_Task <- R6::R6Class(
-    "lcmmtp_Task",
+# R6 class for a lcmmtp_task
+lcmmtp_task <- R6::R6Class(
+    "lcmmtp_task",
     cloneable = FALSE,
     public = list(
         data = NULL,
