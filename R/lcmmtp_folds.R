@@ -1,6 +1,6 @@
 # R6 class for an lcm_Folds object
-lcmmtp_Folds <- R6::R6Class(
-    "lcm_Folds",
+lcmmtp_folds <- R6::R6Class(
+    "lcm_folds",
     cloneable = FALSE,
     public = list(
         folds = NULL,

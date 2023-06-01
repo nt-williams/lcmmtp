@@ -8,6 +8,9 @@ D_Lt <- function(P_a, t, tau) {
             `Q_Z,s+1` <- P_a[[g("lcmmtp_Q_Z{s+1}")]]
             `Q_L,s` <- P_a[[g("lcmmtp_Q_L{s}")]]
 
+            `Q_Z,s+1`[is.na(`Q_Z,s+1`)] <- -999
+            `Q_L,s`[is.na(`Q_L,s`)] <- -999
+
             w <- `K'_t+1,s` * `H_t,s`
             # w <- pmin(w, quantile(w, 0.99))
             w * (`Q_Z,s+1` - `Q_L,s`)
@@ -23,6 +26,9 @@ D_Lt <- function(P_a, t, tau) {
 
                 `Q_Z,s` <- P_a[[g("lcmmtp_Q_Z{s}")]]
                 `Q_L,s` <- P_a[[g("lcmmtp_Q_L{s}")]]
+
+                `Q_Z,s`[is.na(`Q_Z,s`)] <- -999
+                `Q_L,s`[is.na(`Q_L,s`)] <- -999
 
                 w <- `K'_t+1,s` * `H_t,s-1`
                 # w <- pmin(w, quantile(w, 0.99))

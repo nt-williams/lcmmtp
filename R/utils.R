@@ -1,12 +1,13 @@
 g <- glue::glue
 
-G <- function(var, g, level, risk = TRUE) {
-    (as.numeric(var == level) * risk) / g #b(g)
+G <- function(var, g, level, risk = TRUE, cens = TRUE) {
+    out <- (as.numeric(var == level) * risk * cens) / g #b(g)
+    out[is.na(out)] <- 0
+    out
 }
 
-# for now, assume not a survival outcome
-density_ratios <- function(pred, risk = TRUE) {
-    (pred * risk) / (1 - pmin(pred, 0.999))
+density_ratios <- function(pred, risk = TRUE, cens = TRUE) {
+    (pred * risk * cens) / (1 - pmin(pred, 0.999))
 }
 
 K_p <- function(G, l, u) {
