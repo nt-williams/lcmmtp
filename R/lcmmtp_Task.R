@@ -21,14 +21,6 @@ lcmmtp_task <- R6::R6Class(
                 }
             }
 
-            if (!is.null(vars$cens)) {
-                for (y in c(vars$risk, vars$Y)) {
-                    data.table::set(tmp,
-                                    j = y,
-                                    value = ifelse(is.na(tmp[[y]]), -999, tmp[[y]]))
-                }
-            }
-
             self$data <- data.table::as.data.table(tmp[, vars$all_vars()])
             self$data[["lcmmtp_ID"]] <- seq.int(nrow(self$data))
             self$augmented <- self$data
