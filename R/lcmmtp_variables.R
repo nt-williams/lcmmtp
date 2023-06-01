@@ -11,35 +11,39 @@ lcmmtp_variables <- R6::R6Class(
         Z = NULL,
         Y = NULL,
         risk = NULL,
+        cens = NULL,
         tau = NULL,
-        initialize = function(W, L, A, Z, M, Y) {
+        initialize = function(W, L, A, Z, M, Y, cens) {
             checkmate::assertCharacter(A)
-            self$tau <- length(A)
+            checkmate::assertCharacter(Y)
+
+            self$A <- A
+            self$Y <- Y[length(Y)]
+            if (length(Y) > 1) {
+                self$risk <- Y[1:(length(Y) - 1)]
+            }
+
+            self$tau <- private$what_is_tau()
 
             if (!missing(W)) {
                 checkmate::assertCharacter(W)
                 self$W <- W
             }
 
-            checkmate::assertCharacter(M, len = self$tau)
-            if (length(Y) > 1) {
-                checkmate::assertCharacter(Y, len = self$tau)
-            } else {
-                checkmate::assertCharacter(Y, len = 1)
+            if (!missing(cens)) {
+                checkmate::assertCharacter(cens, len = self$tau)
+                self$cens <- cens
             }
+
+            checkmate::assertCharacter(M, len = self$tau)
             checkmate::assertList(L, types = "character", len = self$tau)
             checkmate::assertList(Z, types = c("character", "null"), len = self$tau)
 
             self$L <- L
-            self$A <- A
             self$Z <- Z
             self$M <- M
 
-            self$Y <- Y[length(Y)]
-            if (length(Y) > 1) {
-                self$risk <- Y[1:(length(Y) - 1)]
-            }
-            invisible()
+            invisible(self)
         },
         #' Get all parent nodes for a variable
         history = function(var = c("L", "A", "Z", "M", "Y"), t) {
@@ -54,7 +58,7 @@ lcmmtp_variables <- R6::R6Class(
         },
         #' Return the names of all variables
         all_vars = function() {
-            c(self$W, unlist(self$L), self$A, unlist(self$Z), self$M, self$risk, self$Y)
+            c(self$W, unlist(self$L), self$A, unlist(self$Z), self$M, self$risk, self$cens, self$Y)
         }
     ),
     private = list(
@@ -75,6 +79,12 @@ lcmmtp_variables <- R6::R6Class(
         },
         parents_Y = function() {
             c(self$W, unlist(self$L), self$A, unlist(self$Z), self$M)
+        },
+        what_is_tau = function() {
+            if (is.null(self$risk)) {
+                return(length(self$A))
+            }
+            length(self$risk) + 1
         }
     )
 )

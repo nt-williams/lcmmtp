@@ -12,6 +12,7 @@ lcmmtp_Task <- R6::R6Class(
         type = NULL,
         initialize = function(data, vars, d_prime, d_star) {
             tmp <- data.table::copy(data)
+
             if (!is.null(vars$risk)) {
                 for (y in c(vars$risk, vars$Y)) {
                     data.table::set(tmp,
@@ -19,14 +20,23 @@ lcmmtp_Task <- R6::R6Class(
                                     value = private$convert_to_surv(tmp[[y]]))
                 }
             }
+
+            if (!is.null(vars$cens)) {
+                for (y in c(vars$risk, vars$Y)) {
+                    data.table::set(tmp,
+                                    j = y,
+                                    value = ifelse(is.na(tmp[[y]]), -999, tmp[[y]]))
+                }
+            }
+
             self$data <- data.table::as.data.table(tmp[, vars$all_vars()])
             self$data[["lcmmtp_ID"]] <- seq.int(nrow(self$data))
             self$augmented <- self$data
             self$vars <- vars$clone()
             self$n <- nrow(self$data)
             self$type <- private$check_type()
-            self$shifted_aprime <- self$shift_trt(self$data, self$vars$A, d_prime)
-            self$shifted_astar <- self$shift_trt(self$data, self$vars$A, d_star)
+            self$shifted_aprime <- self$shift_trt(self$data, self$vars$A, self$vars$cens, d_prime)
+            self$shifted_astar <- self$shift_trt(self$data, self$vars$A, self$vars$cens, d_star)
         },
         # Create augmented data for pooled regressions
         augment = function(data, t) {
@@ -40,7 +50,8 @@ lcmmtp_Task <- R6::R6Class(
             cbind(ans, m_underbar)
         },
         unique_M = function() {
-            unique(as.vector(as.matrix(self$data[, self$vars$M])))
+            M <- self$data[, self$vars$M]
+            unique(as.vector(as.matrix(M[complete.cases(M), ])))
         },
         stack_data = function(data, shifted, t) {
             shifted_half <- data
@@ -49,13 +60,25 @@ lcmmtp_Task <- R6::R6Class(
                 shifted_half[[self$vars$A[t]]] <- shifted[[self$vars$A[t]]]
             }
 
+            if (!is.null(self$vars$cens)) {
+                shifted_half[[self$vars$cens[t]]] <- shifted[[self$vars$cens[t]]]
+            }
+
             out <- rbind(data, shifted_half)
             out[["tmp_lcmmtp_stack_indicator"]] <- rep(c(0, 1), each = nrow(data))
             out
         },
-        shift_trt = function(data, trt, .f) {
+        shift_trt = function(data, trt, cens = NULL, .f) {
             for (a in trt) {
                 data[[a]] <- .f(data, a)
+            }
+
+            if (is.null(cens)) {
+                return(data)
+            }
+
+            for (cs in cens) {
+                data[[cs]] <- 1
             }
             data
         },
@@ -70,18 +93,20 @@ lcmmtp_Task <- R6::R6Class(
 
             data[[vars$risk[t - 1]]] == 1 & !is.na(data[[vars$risk[t - 1]]])
         },
-        censored = function(data, t, lag = FALSE) {
-            if (is.null(vars$cens)) {
+        observed = function(data, t, lag = FALSE) {
+            if (is.null(self$vars$cens)) {
                 return(rep(TRUE, nrow(data)))
             }
 
-            if (!lag || t == 1) {
-                return(data[[vars$cens[t]]] == 1)
+            if (!lag) {
+                return(data[[self$vars$cens[t]]] == 1)
             }
 
             if (lag && t > 1) {
-                return(data[[vars$cens[t - 1]]] == 1)
+                return(data[[self$vars$cens[t - 1]]] == 1)
             }
+
+            rep(TRUE, nrow(data))
         }
     ),
     private = list(
@@ -91,7 +116,7 @@ lcmmtp_Task <- R6::R6Class(
         check_type = function() {
             y <- self$data[[self$vars$Y]]
             checkmate::assertNumeric(y)
-            if (all(y == 1 | y == 0)) return("binomial")
+            if (all(y == 1 | y == 0, na.rm = T)) return("binomial")
             "continuous"
         },
         convert_to_surv = function(x) {
