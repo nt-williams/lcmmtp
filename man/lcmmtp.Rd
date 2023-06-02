@@ -7,9 +7,10 @@
 lcmmtp(data, vars, d_prime, d_star, learners, folds)
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{A data frame containing all necessary variables}
 
-\item{vars}{An `lcm_Vars` object mapping observed variables to the assumed NPSEM}
+\item{vars}{An `lcmmtp_variables` object mapping observed variables to
+the assumed variable structure.}
 
 \item{folds}{The number of folds for cross-fitting}
 }

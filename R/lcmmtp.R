@@ -1,7 +1,7 @@
 #' Causal Mediation with Longitudinal Data Using Modified Treatment Policies
 #'
 #' @param data A data frame containing all necessary variables
-#' @param vars An `lcm_variables` object mapping observed variables to
+#' @param vars An `lcmmtp_variables` object mapping observed variables to
 #'  the assumed variable structure.
 #' @param d_prime
 #' @param d_star
