@@ -12,6 +12,19 @@
 #' @export
 #'
 #' @examples
+#' vars <- lcmmtp_variables$new(
+#'     L = list(c("L_1"), c("L_2")),
+#'     A = c("A_1", "A_2"),
+#'     Z = list(c("Z_1"), c("Z_2")),
+#'     M = c("M_1", "M_2"),
+#'     Y = "Y",
+#'     cens = c("c1", "c2")
+#' )
+#'
+#' d_ap <- function(data, trt) rep(1, length(data[[trt]]))
+#' d_as <- function(data, trt) rep(0, length(data[[trt]]))
+#'
+#' lcmmtp(lcmmtp_foo, vars, d_ap, d_as, "glm", 5)
 lcmmtp <- function(data, vars, d_prime, d_star, learners, folds) {
     checkmate::assertDataFrame(data[, vars$all_vars()])
     checkmate::assertR6(vars, "lcmmtp_variables")
