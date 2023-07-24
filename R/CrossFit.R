@@ -13,5 +13,6 @@ CrossFit <- function(Tr, P, y, x, type = c("binomial", "continuous"), learners) 
                      outcome_type = match.arg(type),
                      folds = 10,
                      newdata = list(P),
-                     group = "lcmmtp_ID")$preds[[1]][, 1]
+                     metalearner = "glm",
+                     group = "lcmmtp_ID")$preds[[1]]
 }
