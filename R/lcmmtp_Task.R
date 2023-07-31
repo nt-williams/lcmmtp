@@ -42,7 +42,7 @@ lcmmtp_task <- R6::R6Class(
             cbind(ans, m_underbar)
         },
         unique_M = function() {
-            M <- self$data[, self$vars$M]
+            M <- self$data[, self$vars$M, drop = FALSE]
             unique(as.vector(as.matrix(M[complete.cases(M), ])))
         },
         stack_data = function(data, shifted, t) {
