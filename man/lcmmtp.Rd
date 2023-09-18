@@ -4,7 +4,7 @@
 \alias{lcmmtp}
 \title{Causal Mediation with Longitudinal Data Using Modified Treatment Policies}
 \usage{
-lcmmtp(data, vars, d_prime, d_star, learners, folds)
+lcmmtp(data, vars, d_prime, d_star, control = .lcmmtp_control())
 }
 \arguments{
 \item{data}{A data frame containing all necessary variables}
@@ -12,7 +12,7 @@ lcmmtp(data, vars, d_prime, d_star, learners, folds)
 \item{vars}{An `lcmmtp_variables` object mapping observed variables to
 the assumed variable structure.}
 
-\item{folds}{The number of folds for cross-fitting}
+\item{control}{}
 }
 \value{
 An object of class `lcmmtp`
@@ -33,5 +33,5 @@ vars <- lcmmtp_variables$new(
 d_ap <- function(data, trt) rep(1, length(data[[trt]]))
 d_as <- function(data, trt) rep(0, length(data[[trt]]))
 
-lcmmtp(lcmmtp_foo, vars, d_ap, d_as, "glm", 5)
+lcmmtp(lcmmtp_foo, vars, d_ap, d_as, .lcmmtp_control(folds = 5))
 }

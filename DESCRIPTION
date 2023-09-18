@@ -28,7 +28,7 @@ Imports:
     slider
 URL: https://github.com/nt-williams/lcmmtp
 BugReports: https://github.com/nt-williams/lcmmtp/issues
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

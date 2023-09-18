@@ -4,7 +4,7 @@
 \alias{CrossFit}
 \title{Perform Cross-fitting}
 \usage{
-CrossFit(Tr, P, y, x, type = c("binomial", "continuous"), learners)
+CrossFit(Tr, P, y, x, type = c("binomial", "continuous"), learners, folds)
 }
 \arguments{
 \item{Tr}{training data}

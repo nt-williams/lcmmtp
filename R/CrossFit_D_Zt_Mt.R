@@ -1,4 +1,4 @@
-CrossFit_D_Zt_Mt <- function(x, d_prime, d_star, t, Folds, lrnrs) {
+CrossFit_D_Zt_Mt <- function(x, d_prime, d_star, t, Folds, control) {
     if (t == x$vars$tau) {
         x$augmented[[g("lcmmtp_D_M{t+1}")]] <- 1
         x$augmented[[g("lcmmtp_Q_M{t+1}")]] <- 1
@@ -24,7 +24,9 @@ CrossFit_D_Zt_Mt <- function(x, d_prime, d_star, t, Folds, lrnrs) {
             c(g("lcmmtp_med_{t:x$vars$tau}"),
               x$vars$history("A", t),
               x$vars$A[t]),
-            "continuous", lrnrs
+            "continuous",
+            control$learners_QL,
+            control$folds_QL
         )
         P_a[[g("lcmmtp_Q_Z{t}")]][!r] <- 0
 
@@ -40,7 +42,8 @@ CrossFit_D_Zt_Mt <- function(x, d_prime, d_star, t, Folds, lrnrs) {
               x$vars$history("A", t),
               x$vars$A[t]),
             ifelse(t == x$vars$tau, "binomial", "continuous"),
-            lrnrs
+            control$learners_QM,
+            control$folds_QM
         )
         P_a[[g("lcmmtp_Q_M{t}")]][!r] <- 0
 
