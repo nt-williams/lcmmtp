@@ -24,7 +24,7 @@
 #' d_as <- function(data, trt) rep(0, length(data[[trt]]))
 #'
 #' lcmmtp(lcmmtp_foo, vars, d_ap, d_as, .lcmmtp_control(folds = 5))
-lcmmtp <- function(data, vars, d_prime, d_star, control = .lcmmtp_control()) {
+lcmmtp <- function(data, vars, d_prime, d_star, id = NULL, control = .lcmmtp_control()) {
     checkmate::assertDataFrame(data[, vars$all_vars()])
     checkmate::assertR6(vars, "lcmmtp_variables")
     checkmate::assertNumber(control$folds, lower = 1, upper = nrow(data) - 1)
@@ -34,7 +34,7 @@ lcmmtp <- function(data, vars, d_prime, d_star, control = .lcmmtp_control()) {
     require("mlr3superlearner")
 
     task <- lcmmtp_task$new(data, vars, d_prime, d_star)
-    Folds <- lcmmtp_folds$new(nrow(data), control$folds)
+    Folds <- lcmmtp_folds$new(nrow(data), control$folds, id)
 
     for (t in vars$tau:1) {
         CrossFit_D_Lt(task, t, Folds, control)
