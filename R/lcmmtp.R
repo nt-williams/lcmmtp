@@ -33,7 +33,7 @@ lcmmtp <- function(data, vars, d_prime, d_star, id = NULL, control = .lcmmtp_con
 
     require("mlr3superlearner")
 
-    task <- lcmmtp_task$new(data, vars, d_prime, d_star)
+    task <- lcmmtp_task$new(data, vars, id, d_prime, d_star)
     Folds <- lcmmtp_folds$new(nrow(data), control$folds, id)
 
     for (t in vars$tau:1) {

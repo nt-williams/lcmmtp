@@ -10,7 +10,7 @@ lcmmtp_task <- R6::R6Class(
         vars = NULL,
         n = NULL,
         type = NULL,
-        initialize = function(data, vars, d_prime, d_star) {
+        initialize = function(data, vars, id = NULL, d_prime, d_star) {
             tmp <- data.table::copy(data)
 
             if (!is.null(vars$risk)) {
@@ -22,7 +22,15 @@ lcmmtp_task <- R6::R6Class(
             }
 
             self$data <- data.table::as.data.table(tmp[, vars$all_vars()])
-            self$data[["lcmmtp_ID"]] <- seq.int(nrow(self$data))
+
+            if (!is.null(id)) {
+                self$data[["lcmmtp_ID"]] <- id
+            } else {
+                self$data[["lcmmtp_ID"]] <- seq.int(nrow(self$data))
+            }
+
+            self$data[["lcmmtp_row_index"]] <- seq.int(nrow(self$data))
+
             self$augmented <- self$data
             self$vars <- vars$clone()
             self$n <- nrow(self$data)
