@@ -63,11 +63,13 @@ lcmmtp <- function(data, vars, d_prime, d_star, id = NULL, control = .lcmmtp_con
     })
 
     S <- rowSums(sapply(nuis, function(m) m$S))
+    S <- split(S, task$data$lcmmtp_ID)
+    j <- length(S)
 
     ans <- list(
         theta = sum(vapply(nuis, function(m) m$theta * m$lambda, 1)),
-        var = var(S) / task$n,
-        S = S
+        var = sqrt(var(vapply(S, function(x) mean(x), 1)) / j),
+        S = as.vector(unlist(S))
     )
 
     class(ans) <- "lcmmtp"
