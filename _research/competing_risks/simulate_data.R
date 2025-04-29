@@ -56,9 +56,12 @@ simulate_data <- function(n, prob_A = NULL) {
            M3 = ifelse(Y3 == 1, 0, M3))
 }
 
-res <- map(1:500, function(i) {
-    set.seed(i)
-    simulated_data <- simulate_data(1e3)
+J <- 1
+N <- 1e4
+
+res <- map(seq_along(J), function(j) {
+    set.seed(j)
+    simulated_data <- simulate_data(N)
     lcmmtp(simulated_data,
            c("A1", "A2", "A3"),
            c("Y2", "Y3", "Y4"),
@@ -76,4 +79,3 @@ res <- map(1:500, function(i) {
     }
 ) |>
     list_rbind()
-

@@ -58,7 +58,7 @@ Variables <- R6::R6Class(
 
         # Return the names of all variables
         allVariables = function() {
-            c(self$baseline, unlist(self$timeVaryConfounders), self$treatment, unlist(self$mediatorOutcomeConfounders), self$mediator, self$risk, self$censoring, self$competingRisks, self$outcome)
+            c(self$baselineConfounders, unlist(self$timeVaryConfounders), self$treatment, unlist(self$mediatorOutcomeConfounders), self$mediator, self$risk, self$censoring, self$competingRisks, self$outcome)
         }
     ),
     private = list(
