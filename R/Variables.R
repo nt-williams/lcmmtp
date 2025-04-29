@@ -31,7 +31,7 @@ Variables <- R6::R6Class(
             assertCharacter(censoring, len = self$timeHorizon, null.ok = TRUE)
             assertCharacter(competingRisks, len = self$timeHorizon, null.ok = TRUE)
             assertCharacter(mediator, len = self$timeHorizon)
-            assertList(timeVaryConfounders, types = "character", len = self$timeHorizon)
+            assertList(timeVaryConfounders, types = c("character", "null"), len = self$timeHorizon)
             assertList(mediatorOutcomeConfounders, types = c("character", "null"), len = self$timeHorizon)
 
             self$baselineConfounders <- baselineConfounders
