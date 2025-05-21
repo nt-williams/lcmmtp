@@ -13,7 +13,7 @@ MediatorRegression <- function(task, time, folds, d_star, control) {
 
         # Create indicators for the subset of observations to use for training
         outcomeFree <- task$outcomeFree(training, time-1)
-        competingRiskFree <- task$competingRiskFree(training, time-2)
+        competingRiskFree <- task$competingRiskFree(training, time-1)
         observed <- task$observed(training, time, TRUE)
 
         # Subset data
@@ -21,7 +21,7 @@ MediatorRegression <- function(task, time, folds, d_star, control) {
 
         # Create indicators for the subset of observations to use for predictions
         outcomeFreeValidation <- task$outcomeFree(validation, time-1)
-        competingRiskFreeValidation <- task$competingRiskFree(validation, time-2)
+        competingRiskFreeValidation <- task$competingRiskFree(validation, time-1)
         observedValidation <- task$observed(validation, time, TRUE)
         atRisk <- outcomeFreeValidation & competingRiskFreeValidation
 
