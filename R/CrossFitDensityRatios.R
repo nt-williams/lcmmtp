@@ -24,13 +24,25 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
         observedValidation <- task$observed(validation, time, TRUE)
         atRisk <- outcomeFreeValidation & competingRiskFreeValidation
 
+        if (length(task$variables$treatment) > 1) {
+            # If treatment is time-varying, grab treatment at time t
+            treatment_t <- task$variables$treatment[[t]]
+        } else if (time > 1) {
+            # If treatment is not time-varying and not the first time-point, just set to NULL
+            # It will be grabbed from the history
+            treatment_t <- NULL
+        } else {
+            # Otherwise, if it's the first time-point, grab treatment at time 1
+            treatment_t <- task$variables$treatment[[1]]
+        }
+
         # Density ratio model predictions under the a-prime shift
         predictionsAPrime[atRisk & observedValidation] <-
             CrossFit(
             stackedData,
             validation[atRisk & observedValidation, ],
             "lcmmtp_stack_indicator",
-            c(task$variables$history("A", time), task$variables$treatment[time]),
+            c(task$variables$history("A", time), treatment_t, task$variables$censoring),
             "binomial",
             control$learners_trt,
             control$folds_trt
@@ -48,7 +60,7 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
                 stackedData,
                 validation[atRisk & observedValidation, ],
                 "lcmmtp_stack_indicator",
-                c(task$variables$history("A", time), task$variables$treatment[time]),
+                c(task$variables$history("A", time), treatment_t, task$variables$censoring),
                 "binomial",
                 control$learners_trt,
                 control$folds_trt

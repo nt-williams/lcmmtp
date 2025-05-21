@@ -68,7 +68,7 @@ EstimationTask <- R6::R6Class(
                 dataCopy[[self$variables$treatment[time]]] <- shifted[[self$variables$treatment[time]]]
             }
 
-            if (!is.null(self$vars$censoring)) {
+            if (!is.null(self$variables$censoring)) {
                 dataCopy[[self$variables$censoring[time]]] <- shifted[[self$variables$censoring[time]]]
             }
 

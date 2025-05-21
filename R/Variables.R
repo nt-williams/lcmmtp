@@ -46,7 +46,7 @@ Variables <- R6::R6Class(
 
         # Get all parent nodes for a variable
         history = function(var = c("L", "A", "Z", "M", "Y"), time) {
-            switch(
+            parents <- switch(
                 match.arg(var),
                 L = private$parentsTimeVary(time),
                 A = private$parentsTreatment(time),
@@ -54,6 +54,7 @@ Variables <- R6::R6Class(
                 M = private$parentsMediator(time),
                 Y = private$parentsOutcome()
             )
+            as.vector(na.omit(parents))
         },
 
         # Return the names of all variables
