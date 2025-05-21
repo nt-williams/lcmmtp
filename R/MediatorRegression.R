@@ -28,12 +28,15 @@ MediatorRegression <- function(task, time, folds, d_star, control) {
         # Create outcome variable
         training[[g("lcmmtp_D_M{time+1}")]] <- (training[[g("lcmmtp_med_{time}")]] == training[[task$variables$mediator[time]]]) * training[[g("lcmmtp_D_M{time+1}")]]
 
+        # Figure out what the treatment variable is
+        treatment_t <- task$currentTreatment(time)
+
         # Estimate the probability of M = m in the pooled data
         validation[[g("lcmmtp_Q_M{time}")]][atRisk & observedValidation] <- CrossFit(
             training,
-            task$shiftTreatment(validation[atRisk & observedValidation, ], task$variables$treatment[time], task$variables$censoring[time], d_star),
+            task$shiftTreatment(validation[atRisk & observedValidation, ], treatment_t, task$variables$censoring[time], d_star),
             g("lcmmtp_D_M{time+1}"),
-            c(g("lcmmtp_med_{time:task$variables$timeHorizon}"), task$variables$history("A", time), task$variables$treatment[time]),
+            c(g("lcmmtp_med_{time:task$variables$timeHorizon}"), task$variables$history("A", time), treatment_t),
             ifelse(time == task$variables$timeHorizon, "binomial", "continuous"),
             control$learners_QM,
             control$folds_QM

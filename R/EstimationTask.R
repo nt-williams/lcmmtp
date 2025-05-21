@@ -78,19 +78,22 @@ EstimationTask <- R6::R6Class(
         },
 
         shiftTreatment = function(data, treatment, censoring, .f) {
-            for (a in treatment) {
-                data[[a]] <- .f(data, a)
+            dataCopy <- data.table::copy(data)
+            if (!is.null(treatment)) {
+                for (a in treatment) {
+                    dataCopy[[a]] <- .f(dataCopy, a)
+                }
             }
 
             if (is.null(censoring)) {
-                return(data)
+                return(dataCopy)
             }
 
             for (cs in censoring) {
-                data[[censoring]] <- 1
+                dataCopy[[censoring]] <- 1
             }
 
-            data
+            dataCopy
         },
 
         outcomeFree = function(data, time) {
@@ -140,6 +143,21 @@ EstimationTask <- R6::R6Class(
             }
 
             rep(TRUE, nrow(data))
+        },
+
+        currentTreatment = function(time) {
+            if (length(self$variables$treatment) > 1) {
+                # If treatment is time-varying, grab treatment at time t
+                return(self$variables$treatment[[t]])
+            }
+
+            if (time > 1) {
+                # If treatment is not time-varying and not the first time-point, just set to NULL
+                # It will be grabbed from the history
+                return(NULL)
+            }
+            # Otherwise, if it's the first time-point, grab treatment at time 1
+            self$variables$treatment[[1]]
         }
     ),
     private = list(
