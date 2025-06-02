@@ -100,5 +100,6 @@ lcmmtp <- function(data,
         S = as.vector(unlist(S))
     )
 
-    ife::ife(ans$theta, as.vector(unlist(S)))
+    list(estimate = ife::ife(ans$theta, as.vector(unlist(S))),
+         augmented = task$augmented)
 }
