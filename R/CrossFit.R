@@ -15,7 +15,7 @@ CrossFit <- function(Tr, P, y, x, type = c("binomial", "continuous"), learners, 
                      folds = folds,
                      newdata = list(P),
                      group = "lcmmtp_ID",
-                     discrete = FALSE)$preds[[1]]
+                     discrete = TRUE)$preds[[1]]
 }
 
 cv_glmnet_formula <- function(formula, data, family, subset, ...) {
