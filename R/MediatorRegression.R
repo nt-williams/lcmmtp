@@ -32,7 +32,7 @@ MediatorRegression <- function(task, time, folds, d_star, control) {
         treatment_t <- task$currentTreatment(time)
 
         # Estimate the probability of M = m in the pooled data
-        validation[[g("lcmmtp_Q_M{time}")]][atRisk & observedValidation] <- CrossFit(
+        fit <- CrossFit(
             training,
             task$shiftTreatment(validation[atRisk & observedValidation, ], treatment_t, task$variables$censoring[time], d_star),
             g("lcmmtp_D_M{time+1}"),
@@ -41,6 +41,14 @@ MediatorRegression <- function(task, time, folds, d_star, control) {
             control$learners_QM,
             control$folds_QM
         )
+
+        if (time == task$variables$timeHorizon) {
+            validation[[g("lcmmtp_Q_M{time}")]][atRisk & observedValidation] <- fit$preds[[1]]
+        } else {
+            validation[[g("lcmmtp_Q_M{time}")]][atRisk & observedValidation] <-
+                isotonic_constraint(predict(fit, training),
+                                    training[[g("lcmmtp_D_M{time+1}")]])(fit$preds[[1]])
+        }
 
         # Assign deterministic probabilities for the value of the history of M
         # If the entire history of M is zero, the probability is 1

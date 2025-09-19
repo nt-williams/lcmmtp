@@ -24,7 +24,7 @@ MarginalizeMediatorOutcomeConfounder <- function(task, time, folds, d_prime, con
         treatment_t <- task$currentTreatment(time)
 
         # Regress pseudo-outcome on treatment, parents of treatment
-        validation[[g("lcmmtp_Q_Z{time}")]][atRisk & observedValidation] <- CrossFit(
+        fit <- CrossFit(
             training,
             task$shiftTreatment(validation[atRisk & observedValidation, ], treatment_t, task$variables$censoring[time], d_prime),
             g("lcmmtp_D_L{time}"),
@@ -33,6 +33,15 @@ MarginalizeMediatorOutcomeConfounder <- function(task, time, folds, d_prime, con
             control$learners_QL,
             control$folds_QL
         )
+
+        if (task$outcomeType == "binomial") {
+            validation[[g("lcmmtp_Q_Z{time}")]][atRisk & observedValidation] <-
+                isotonic_constraint(predict(fit, training),
+                                    training[[g("lcmmtp_D_L{time}")]])(fit$preds[[1]])
+        } else {
+            validation[[g("lcmmtp_Q_Z{time}")]][atRisk & observedValidation] <- fit$preds[[1]]
+        }
+
 
         # Assign deterministic probabilities based on already experiencing the outcome or the competing risk
         validation[[g("lcmmtp_Q_Z{time}")]][!outcomeFreeValidation] <- 0

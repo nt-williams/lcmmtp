@@ -59,6 +59,7 @@ lcmmtp <- function(data,
 
         # Integrate out the mediator-outcome confounder through regression
         MarginalizeMediatorOutcomeConfounder(task, time, folds, d_prime, control)
+
         # DR transformation of the mediator-outcome confounder regression
         task$augmented[[g("lcmmtp_D_Z{time}")]] <- D_Zt(task$augmented, time, variables$timeHorizon, control$trim)
 
@@ -100,5 +101,6 @@ lcmmtp <- function(data,
         S = as.vector(unlist(S))
     )
 
+    # also output all the density ratios
     ife::ife(ans$theta, as.vector(unlist(S)))
 }

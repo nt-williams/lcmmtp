@@ -37,7 +37,7 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
             "binomial",
             control$learners_trt,
             control$folds_trt
-        )
+        )$preds[[1]]
 
         # Create stacked data for training under a-star shift
         stackedData <- task$stackData(folds$training(task$data, v), folds$training(task$shiftedUnderAStar, v), time)
@@ -55,7 +55,7 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
                 "binomial",
                 control$learners_trt,
                 control$folds_trt
-            )
+            )$preds[[1]]
 
         # Create pooled data for predicting M=m
         augmentedData <- folds$training(task$augmented, v)
@@ -81,7 +81,7 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
             "binomial",
             control$learners_mediator,
             control$folds_mediator
-        )
+        )$preds[[1]]
 
         # Assign deterministic probabilities for the value of the history of M
         # If the entire history of M is zero, the probability is 1

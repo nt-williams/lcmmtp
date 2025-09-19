@@ -30,7 +30,7 @@ OutcomeRegression <- function(task, time, folds, control) {
         training <- training[training[[g("lcmmtp_med_{time}")]] == training[[task$variables$mediator[time]]], ]
 
         # Estimate the outcome regression
-        validation[[g("lcmmtp_Q_L{time}")]][atRisk & observedValidation] <- CrossFit(
+        fit <- CrossFit(
             training,
             validation[atRisk & observedValidation, ],
             g("lcmmtp_D_Z{time+1}"),
@@ -39,6 +39,14 @@ OutcomeRegression <- function(task, time, folds, control) {
             control$learners_QZ,
             control$folds_QZ
         )
+
+        if (time == task$variables$timeHorizon || task$outcomeType == "continuous") {
+            validation[[g("lcmmtp_Q_L{time}")]][atRisk & observedValidation] <- fit$preds[[1]]
+        } else {
+            validation[[g("lcmmtp_Q_L{time}")]][atRisk & observedValidation] <-
+                isotonic_constraint(predict(fit, training),
+                                    training[[g("lcmmtp_D_Z{time+1}")]])(fit$preds[[1]])
+        }
 
         # Assign deterministic probabilities for those who experience the outcome and those who experienced the competing event
         validation[[g("lcmmtp_Q_L{time}")]][!outcomeFreeValidation] <- 0
