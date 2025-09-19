@@ -101,6 +101,6 @@ lcmmtp <- function(data,
         S = as.vector(unlist(S))
     )
 
-    # also output all the density ratios
+    # TODO: also output all the density ratios
     ife::ife(ans$theta, as.vector(unlist(S)))
 }
