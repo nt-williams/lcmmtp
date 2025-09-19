@@ -55,17 +55,17 @@ lcmmtp <- function(data,
         # Estimate Riesz Representers
         CrossFitDensityRatios(task, time, folds, control)
         # DR transformation of outcome regression
-        task$augmented[[g("lcmmtp_D_L{time}")]] <- D_Lt(task$augmented, time, variables$timeHorizon)
+        task$augmented[[g("lcmmtp_D_L{time}")]] <- D_Lt(task$augmented, time, variables$timeHorizon, control$trim)
 
         # Integrate out the mediator-outcome confounder through regression
         MarginalizeMediatorOutcomeConfounder(task, time, folds, d_prime, control)
         # DR transformation of the mediator-outcome confounder regression
-        task$augmented[[g("lcmmtp_D_Z{time}")]] <- D_Zt(task$augmented, time, variables$timeHorizon)
+        task$augmented[[g("lcmmtp_D_Z{time}")]] <- D_Zt(task$augmented, time, variables$timeHorizon, control$trim)
 
         # Estimate mediator regression
         MediatorRegression(task, time, folds, d_star, control)
         # DR transformation of the conditional mediator expectation
-        task$augmented[[g("lcmmtp_D_M{time}")]] <- D_Mt(task$augmented, time, variables$timeHorizon, variables$mediator)
+        task$augmented[[g("lcmmtp_D_M{time}")]] <- D_Mt(task$augmented, time, variables$timeHorizon, variables$mediator, control$trim)
     }
 
     bar_M <- expand.grid(lapply(1:variables$timeHorizon, function(t) task$uniqueMediatorValues()))

@@ -148,7 +148,7 @@ EstimationTask <- R6::R6Class(
         currentTreatment = function(time) {
             if (length(self$variables$treatment) > 1) {
                 # If treatment is time-varying, grab treatment at time t
-                return(self$variables$treatment[[t]])
+                return(self$variables$treatment[[time]])
             }
 
             if (time > 1) {

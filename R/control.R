@@ -19,7 +19,8 @@
                    learners_mediator = "glm",
                    learners_QL = "glm",
                    learners_QZ = "glm",
-                   learners_QM = "glm")
+                   learners_QM = "glm",
+                   trim = 0.99)
 
     if (length(change) == 0) return(params)
     change <- change[names(change) %in% names(params)]

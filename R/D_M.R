@@ -1,4 +1,4 @@
-D_Mt <- function(P_a, t, tau, M) {
+D_Mt <- function(P_a, t, tau, M, trim) {
     summation_1 <- Sum(
         lapply(t:tau, function(s) {
             `K*_t,s` <- K_s(P_a, t, s)
@@ -19,7 +19,7 @@ D_Mt <- function(P_a, t, tau, M) {
             y_2 <- (obs_M * P_a[[g("lcmmtp_Q_M{s+1}")]]) - P_a[[g("lcmmtp_Q_M{s}")]]
 
             w <- `K*_t,s`
-            # w <- pmin(w, quantile(w, 0.99))
+            w <- pmin(w, quantile(w, trim))
             w * y_1 * y_2
         })
     )

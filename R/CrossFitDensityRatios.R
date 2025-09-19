@@ -83,6 +83,13 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
             control$folds_mediator
         )
 
+        # Assign deterministic probabilities for the value of the history of M
+        # If the entire history of M is zero, the probability is 1
+        # If the history of M contains any non-zero, the probability is 0
+        historyIsZero <- apply(validation[, g("lcmmtp_med_{time:task$variables$timeHorizon}"), drop = FALSE] == 0, 1, prod)
+        predictionsMediator[!historyIsZero & !atRisk] <- 0
+        predictionsMediator[historyIsZero & !atRisk] <- 1
+
         # Create index for observation that were observed at the current time
         observedValidation <- task$observed(validation, time)
 

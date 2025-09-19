@@ -7,7 +7,6 @@
 #' @param type outcome variable type (i.e, "binomial", "continuous")
 #' @param learners
 CrossFit <- function(Tr, P, y, x, type = c("binomial", "continuous"), learners, folds) {
-    # browser()
     mlr3superlearner(data = Tr[, c("lcmmtp_ID", x, y)],
                      target = y,
                      library = learners,
@@ -15,7 +14,7 @@ CrossFit <- function(Tr, P, y, x, type = c("binomial", "continuous"), learners, 
                      folds = folds,
                      newdata = list(P),
                      group = "lcmmtp_ID",
-                     discrete = FALSE)$preds[[1]]
+                     discrete = TRUE)$preds[[1]]
 }
 
 cv_glmnet_formula <- function(formula, data, family, subset, ...) {

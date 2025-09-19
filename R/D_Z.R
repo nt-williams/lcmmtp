@@ -1,4 +1,4 @@
-D_Zt <- function(P_a, t, tau) {
+D_Zt <- function(P_a, t, tau, trim) {
     # First summation in formula (6)
     summation_1 <- Sum(
         lapply(t:tau, function(s) {
@@ -12,7 +12,7 @@ D_Zt <- function(P_a, t, tau) {
 
 
             w <- `K'_t,s` * `H_t,s`
-            # w <- pmin(w, quantile(w, 0.99))
+            w <- pmin(w, quantile(w, 0.99))
             w * (`Q_Z,s+1` - `Q_L,s`)
         })
     )
@@ -29,7 +29,7 @@ D_Zt <- function(P_a, t, tau) {
             `Q_L,s`[is.na(`Q_L,s`)] <- -999
 
             w <- `K'_t,s` * `H_t,s-1`
-            # w <- pmin(w, quantile(w, 0.99))
+            w <- pmin(w, quantile(w, trim))
             w * (`Q_L,s`- `Q_Z,s`)
         })
     )
