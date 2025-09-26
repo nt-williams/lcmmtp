@@ -28,16 +28,15 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
         treatment_t <- task$currentTreatment(time)
 
         # Density ratio model predictions under the a-prime shift
-        predictionsAPrime[atRisk & observedValidation] <-
-            CrossFit(
-            stackedData,
-            validation[atRisk & observedValidation, ],
-            "lcmmtp_stack_indicator",
-            c(task$variables$history("A", time), treatment_t, task$variables$censoring),
-            "binomial",
-            control$learners_trt,
-            control$folds_trt
-        )$preds[[1]]
+        if (is.null(treatment_t)) {
+            pred <- rep(0.5, nrow(validation[atRisk & observedValidation, ]))
+        } else {
+            fit <- glm(as.formula(paste0("lcmmtp_stack_indicator~", treatment_t)),
+                       data = stackedData,
+                       family = "binomial")
+            pred <- predict(fit, validation[atRisk & observedValidation, ], type = "response")
+        }
+        predictionsAPrime[atRisk & observedValidation] <- pred
 
         # Create stacked data for training under a-star shift
         stackedData <- task$stackData(folds$training(task$data, v), folds$training(task$shiftedUnderAStar, v), time)
@@ -46,16 +45,15 @@ CrossFitDensityRatios <- function(task, time, folds, control) {
         stackedData <- stackedData[outcomeFree & competingRiskFree & observed, ]
 
         # Density ratio model predictions under the a-star shift
-        predictionsAStar[atRisk & observedValidation] <-
-            CrossFit(
-                stackedData,
-                validation[atRisk & observedValidation, ],
-                "lcmmtp_stack_indicator",
-                c(task$variables$history("A", time), treatment_t, task$variables$censoring),
-                "binomial",
-                control$learners_trt,
-                control$folds_trt
-            )$preds[[1]]
+        if (is.null(treatment_t)) {
+            pred <- rep(0.5, nrow(validation[atRisk & observedValidation, ]))
+        } else {
+            fit <- glm(as.formula(paste0("lcmmtp_stack_indicator~", treatment_t)),
+                       data = stackedData,
+                       family = "binomial")
+            pred <- predict(fit, validation[atRisk & observedValidation, ], type = "response")
+        }
+        predictionsAStar[atRisk & observedValidation] <- pred
 
         # Create pooled data for predicting M=m
         augmentedData <- folds$training(task$augmented, v)

@@ -24,6 +24,7 @@ Imports:
     glue,
     ife,
     mlr3superlearner,
+    OrdMonReg,
     origami,
     R6,
     slider

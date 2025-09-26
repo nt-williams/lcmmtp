@@ -14,7 +14,7 @@ isotonic_constraint <- function(x, y) {
 
     w <- rep(1, length(x))
 
-    iso <- BoundedIsoMean(y, w, a, b)
+    iso <- OrdMonReg::BoundedIsoMean(y, w, a, b)
 
     approxfun(x, iso, method = "constant", rule = 2, ties = mean)
 }

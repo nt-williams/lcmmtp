@@ -15,7 +15,6 @@
                    folds_QL = 10L,
                    folds_QZ = 10L,
                    folds_QM = 10L,
-                   learners_trt = "glm",
                    learners_mediator = "glm",
                    learners_QL = "glm",
                    learners_QZ = "glm",
